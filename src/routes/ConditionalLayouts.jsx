@@ -21,7 +21,7 @@ const ConditionalLayout = () => {
       {/* Jika belum login */}
       {!isLoggedin ? (
         <>
-          <Route path="/" element={<DasboardMasyarakat />} />
+          <Route path="/" element={<LelangProvider><DasboardMasyarakat /></LelangProvider>} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<LoginAdmin />} />
           <Route path="/registrasi" element={<Registrasi />} />
@@ -36,13 +36,13 @@ const ConditionalLayout = () => {
               <Route path="pendataan-barang" element={<LelangProvider><PendataanBarang /></LelangProvider>} />
               <Route path="pendataan-barang/form-pendataan" element={<LelangProvider><FormPendataan /></LelangProvider>} />
               <Route path="generate-laporan" element={<GenerateLaporan />} />
-              <Route path="buka-tutup-lelang" element={<Lelang />} />
+              <Route path="buka-tutup-lelang" element={<LelangProvider><Lelang /></LelangProvider>} />
               <Route path="*" element={<Navigate to="/dasboard-admin" />} />
             </Route>
           ) : (
             // Jika login sebagai Masyarakat Member
             <Route>
-              <Route path="/dasboard-masyarakat-member" element={<MainLayoutsMasyarakatMember />} />
+              <Route path="/dasboard-masyarakat-member" element={<LelangProvider><MainLayoutsMasyarakatMember /></LelangProvider>} />
               <Route path="*" element={<Navigate to="/dasboard-masyarakat-member" />} />
             </Route>
           )}

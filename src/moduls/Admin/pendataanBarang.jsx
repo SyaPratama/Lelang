@@ -10,6 +10,8 @@ function PendataanBarang() {
   const [selectedItem, setSelectedItem] = useState(null); // Tambahkan state untuk item yang dipilih
   const { barang, handleGetBarang, handleEditBarang, handleDeleteBarang } = useLelang();
 
+  
+
   useEffect(() => {
     handleGetBarang();
   }, []);

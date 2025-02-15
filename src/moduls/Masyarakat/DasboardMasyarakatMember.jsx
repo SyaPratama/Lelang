@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Card from "../Admin/components/Card";
 import Search from "../Admin/components/Search";
 import HeaderMasyarakat from "./components/HeaderMasyarakat";
 import HistoryPenawaran from "../Admin/components/HistoryPenawaran";
 import PenawaranHarga from "./components/PenawaranHarga";
 import { useAuth } from '../../Auth/AuthContext';
+import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
 
 const MainLayoutsMasyarakatMember = () => {
   const { name, isLoggedin } = useAuth();
@@ -12,6 +13,11 @@ const MainLayoutsMasyarakatMember = () => {
   const [selectedHistory, setSelectedHistory] = useState([]);
   const [showBidPopup, setShowBidPopup] = useState(false);
   const [bidPrice, setBidPrice] = useState("");
+  const { dataLelang, handleGetLelang } = useLelang();
+
+  useEffect(() => {
+    handleGetLelang();
+  }, []);
 
   const handleHistory = () => {
     const historyData = [
@@ -65,12 +71,20 @@ const MainLayoutsMasyarakatMember = () => {
           <button className="bg-blue-300 text-blue-700 p-2 rounded-lg shadow-md">Hubungi</button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2">
-          <Card
-            isMasyarakatPage={true}
-            onHistory={handleHistory}
-            onTawar={handleBid} // Gunakan handleBid di sini
-            isLoggedin={isLoggedin} // Tambahkan status login
-          />
+          {Array.isArray(dataLelang) && dataLelang.map((lelang) => (
+            <Card
+              key={lelang.id_lelang}
+              isMasyarakatPage={true}
+              onHistory={handleHistory}
+              onTawar={handleBid} // Gunakan handleBid di sini
+              isLoggedin={isLoggedin} // Tambahkan status login
+              title={lelang.nama_barang}
+              description={lelang.deskripsi_barang}
+              date={lelang.tgl_lelang}
+              price={lelang.harga_awal}
+              imageUrl={lelang.gambar} // URL gambar jika tersedia
+            />
+          ))}
         </div>
         {showHistoryPopup && (
           <HistoryPenawaran

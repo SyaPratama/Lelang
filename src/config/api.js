@@ -106,3 +106,22 @@ export const deleteBarang = async (id_barang) => {
     return error.response.data;
   }
 };
+
+// New function to get Lelang data
+export const getLelang = async () => {
+  const token = getToken();
+
+  return axios.get(https + '/lelang', {
+    headers: {
+      'Authorization': 'Bearer ' + token,
+    }
+  })
+  .then((response) => {
+    console.log("API Response:", response);
+    return response;
+  })
+  .catch((error) => {
+    console.error("API Error:", error);
+    return error.response;
+  });
+};
