@@ -4,7 +4,7 @@ const Header = ({ title, name }) => {
   return (
     <div className="grid grid-cols-12 gap-2 w-full">
       <div className="col-span-10">
-        <h1 className="text-3xl text-gray-600 font-semibold">
+        <h1 className="text-3xl title-text text-gray-600 font-semibold">
           {title}
         </h1>
       </div>

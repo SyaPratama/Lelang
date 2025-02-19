@@ -37,7 +37,7 @@ const Registrasi = () => {
     <>
       <section className="flex justify-center items-center min-h-screen bg-gray-100">
         <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-center text-blue-600">Sign Up</h2>
+          <h2 className="text-2xl font-bold text-center text-blue-main">Sign Up</h2>
           <p className="text-center text-gray-600 mb-6">Jadilah Bagian dari Kami!</p>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -80,12 +80,12 @@ const Registrasi = () => {
                 placeholder="********" 
               />
             </div>
-            <button type="submit" className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium">
+            <button type="submit" className="w-full bg-blue-main text-white py-2.5 rounded-lg font-medium">
               Sign Up
             </button>
           </form>
           <p className="text-center text-sm text-gray-500 mt-4">
-            Sudah punya akun? <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
+            Sudah punya akun? <Link to="/login" className="text-[#005f8f] font-bold hover:underline">Login</Link>
           </p>
         </div>
       </section>

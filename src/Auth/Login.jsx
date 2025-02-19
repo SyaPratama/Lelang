@@ -29,7 +29,7 @@ const Login = () => {
     <>
       <section className="flex justify-center items-center min-h-screen bg-gray-100">
         <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-center text-blue-600">Login</h2>
+          <h2 className="text-2xl font-bold text-center text-blue-main">Login</h2>
           <p className="text-center text-gray-600 mb-6">Selamat Datang di Pelelangan Kami!</p>
           <form>
             <div className="mb-4">
@@ -53,12 +53,12 @@ const Login = () => {
               />
             </div>
 
-            <button onClick={handleClick} type="submit" className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium">
+            <button onClick={handleClick} type="submit" className="w-full bg-blue-main text-white py-2.5 rounded-lg font-medium">
               Login
             </button>
           </form>
           <p className="text-center text-sm text-gray-500 mt-4">
-            Belum punya akun? <Link to="/registrasi" className="text-blue-600 hover:underline">Sign Up</Link>
+            Belum punya akun? <Link to="/registrasi" className="text-[#005f8f] font-bold hover:underline">Sign Up</Link>
           </p>
         </div>
       </section>

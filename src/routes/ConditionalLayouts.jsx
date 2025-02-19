@@ -9,7 +9,7 @@ import LoginAdmin from "../Auth/LoginAdmin";
 import Registrasi from "../Auth/Registrasi";
 import FormPendataan from "../moduls/Admin/components/FormPendataan";
 import SideBar from "../layouts/SideBar";
-import { useAuth } from "../Auth/AuthContext";
+import AuthProvider, { useAuth } from "../Auth/AuthContext";
 import MainLayoutsMasyarakatMember from "../moduls/Masyarakat/DasboardMasyarakatMember";
 import { LelangProvider } from "../moduls/Admin/components/AdminContext" // Sesuaikan dengan path yang benar
 
@@ -32,7 +32,7 @@ const ConditionalLayout = () => {
           {/* Jika login sebagai Admin */}
           {authority === "Admin" ? (
             <Route path="/" element={<SideBar />}>
-              <Route path="/dasboard-admin" index element={<DasboardAdmin />} />
+              <Route path="/dasboard-admin" index element={<AuthProvider><DasboardAdmin /></AuthProvider>} />
               <Route path="pendataan-barang" element={<LelangProvider><PendataanBarang /></LelangProvider>} />
               <Route path="pendataan-barang/form-pendataan" element={<LelangProvider><FormPendataan /></LelangProvider>} />
               <Route path="generate-laporan" element={<GenerateLaporan />} />

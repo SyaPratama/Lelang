@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Auth/AuthContext"; // Sesuaikan dengan path yang benar
+import { getUser } from "../../../config/api";
+import { useLelang } from "./AdminContext";
 
 const Logout = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { doLogout, role, name } = useAuth();
+  const { users } = useLelang() 
   const navigate = useNavigate();
 
   const toggleUserMenu = () => {
@@ -27,7 +30,7 @@ const Logout = () => {
           <div>
             <button
               type="button"
-              className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-white-500"
+              className="flex text-sm bg-blue-dark rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-white-500"
               aria-expanded={isUserMenuOpen}
               onClick={toggleUserMenu}
             >
@@ -49,16 +52,17 @@ const Logout = () => {
                 <div className="px-4 py-3">
                   <p className="text-sm text-gray-900">{name}</p> {/* Menampilkan nama pengguna */}
                   <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-900">
-                    085693432984
+                    {users.telp}
                   </p>
                 </div>
                 <ul className="py-1">
                   <li>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-900 dark:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
+                      className="block w-full text-left px-4 py-2 text-sm  text-white bg-[#005f8f] hover:bg-[#00476d]"
+
                     >
-                      Sign out
+                      Logout
                     </button>
                   </li>
                 </ul>

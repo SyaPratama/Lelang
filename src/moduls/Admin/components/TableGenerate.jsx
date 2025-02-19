@@ -32,7 +32,7 @@ const TableGenerate = ({ handleCetakClick }) => {
                 <td className="py-2 px-4 border-b border-gray-200">{row.penawaran}</td>
                 <td className="py-2 px-4 border-b border-gray-200">
                   <button
-                    className="bg-blue-500 text-white py-1 px-2 rounded"
+                    className="bg-blue-main text-white py-1 px-2 rounded"
                     onClick={() => handleCetakClick(row)}
                   >
                     Cetak

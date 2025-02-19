@@ -28,7 +28,7 @@ const LoginAdmin = () => {
   return (
     <section className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-center text-blue-600">Admin Login</h2>
+        <h2 className="text-2xl font-bold text-center text-bg-blue-main">Admin Login</h2>
         <p className="text-center text-gray-600 mb-6">Masuk sebagai Admin</p>
         <form>
           <div className="mb-4">
@@ -53,7 +53,7 @@ const LoginAdmin = () => {
           </div>
           <button
             onClick={handleClick}
-            className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium"
+            className="w-full bg-blue-main text-white py-2.5 rounded-lg font-medium"
           >
             Login
           </button>

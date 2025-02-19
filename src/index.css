@@ -1,9 +1,29 @@
 @import "tailwindcss";
 @plugin "flowbite/plugin";
 @source "../node_modules/flowbite";
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+
+.bg-blue-main{
+    background-color: #005f8f;
+}
+
+.bg-blue-dark{
+    background-color: #00476d;
+}
 
 .hover-side:hover{
-    background-color: #718ADE;
+    background-color: #00476d;
+}
+
+.color-font-dark{
+    background-color: #07273A;
+}
+
+.title-text{
+    font-family: Arial;
+    font-size: 48px;
+    font-weight: bold;
+    color: #07273A;
 }
 
 .bg-close{

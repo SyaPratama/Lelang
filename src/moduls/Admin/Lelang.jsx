@@ -8,7 +8,7 @@ import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan denga
 const Lelang = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState([]);
-  const { dataLelang, handleGetLelang } = useLelang();
+  const { dataLelang, handleGetLelang, handleDeleteLelang, handleUpdateLelangStatus } = useLelang();
 
   useEffect(() => {
     handleGetLelang(); // Pastikan data lelang diambil ketika halaman dimuat
@@ -16,16 +16,12 @@ const Lelang = () => {
 
   console.log("Data Lelang di Komponen:", dataLelang);
 
-  const handleBukaLelang = () => {
-    // Implementasi fungsi buka lelang
+  const handleUpdateStatus = async (id_lelang, tgl_lelang, status) => {
+    await handleUpdateLelangStatus(id_lelang, tgl_lelang, status);
   };
 
-  const handleTutupLelang = () => {
-    // Implementasi fungsi tutup lelang
-  };
-
-  const handleBatal = () => {
-    // Implementasi fungsi batal lelang
+  const handleBatal = async (id_lelang) => {
+    await handleDeleteLelang(id_lelang);
   };
 
   const handleHistory = () => {
@@ -54,9 +50,8 @@ const Lelang = () => {
         {Array.isArray(dataLelang) && dataLelang.map((lelang) => (
           <Card
             key={lelang.id_lelang}
-            onBukaLelang={handleBukaLelang}
-            onTutupLelang={handleTutupLelang}
-            onBatal={handleBatal}
+            onUpdateStatus={(status) => handleUpdateStatus(lelang.id_lelang, lelang.tgl_lelang, status)}
+            onBatal={() => handleBatal(lelang.id_lelang)}
             onHistory={handleHistory}
             showMainButtons={false} // Menyembunyikan tombol buka lelang, batal lelang, dan histori
             title={lelang.nama_barang}
@@ -64,6 +59,7 @@ const Lelang = () => {
             date={lelang.tgl_lelang}
             price={lelang.harga_awal}
             imageUrl={lelang.gambar} // URL gambar jika tersedia
+            status={lelang.status} // Tambahkan status lelang
           />
         ))}
       </section>

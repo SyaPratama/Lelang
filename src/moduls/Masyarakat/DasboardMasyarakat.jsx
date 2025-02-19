@@ -11,11 +11,11 @@ const DasboardMasyarakat = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState([]);
   const { isLoggedin } = useAuth(); // Mengambil status login
-  const { dataLelang, handleGetLelang } = useLelang();
+  const { dataLelang, handleGetPublicData } = useLelang();
   const navigate = useNavigate();
 
   useEffect(() => {
-    handleGetLelang();
+    handleGetPublicData();
   }, []);
 
   const handleHistory = () => {

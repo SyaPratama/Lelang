@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import Card from "./components/Card";
 import Search from "./components/Search";
 import Header from "./components/Header";
@@ -8,9 +9,7 @@ import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan denga
 function PendataanBarang() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null); // Tambahkan state untuk item yang dipilih
-  const { barang, handleGetBarang, handleEditBarang, handleDeleteBarang } = useLelang();
-
-  
+  const { barang, dataLelang, handleGetBarang, handleEditBarang, handleDeleteBarang, handleAddLelang } = useLelang();
 
   useEffect(() => {
     handleGetBarang();
@@ -26,8 +25,19 @@ function PendataanBarang() {
     setIsModalOpen(true); // Buka modal form
   };
 
-  const handleLelang = () => {
-    alert("Lelang");
+  const handleLelang = async (id_barang) => {
+    const lelangExists = dataLelang.find(lelang => lelang.id_barang === id_barang);
+    if (lelangExists) {
+      Swal.fire("Sudah Ada", "Barang ini sudah berada di lelang", "info");
+      return;
+    }
+    
+    const lelangData = {
+      id_barang: id_barang,
+      tgl_lelang: new Date().toISOString().split('T')[0], // Set tanggal lelang ke hari ini
+      status: "dibuka"
+    };
+    await handleAddLelang(lelangData);
   };
 
   const handleModalOpen = () => {
@@ -48,7 +58,7 @@ function PendataanBarang() {
             <Search />
           </div>
           <div className="order-4 col-span-2 lg:col-span-2 lg:order-4 flex justify-start items-start">
-            <button onClick={handleModalOpen} className="bg-blue-600 text-amber-50 py-2 px-2 rounded-lg">
+            <button onClick={handleModalOpen} className="bg-blue-main text-amber-50 py-2 px-2 rounded-lg">
               Tambah
             </button>
           </div>
@@ -62,13 +72,14 @@ function PendataanBarang() {
               key={item.id_barang}
               onDelete={() => handleDelete(item.id_barang)}
               onEdit={() => handleEdit(item.id_barang)}
-              onLelang={handleLelang}
+              onLelang={() => handleLelang(item.id_barang)}
               showMainButtons={true} // Menampilkan tombol edit, hapus, tambah
               title={item.nama_barang}
               description={item.deskripsi_barang}
               price={item.harga_awal}
               date={item.tanggal}
               imageUrl={item.gambar} // Tambahkan URL gambar jika tersedia
+              hideStatus={true} // Jangan tampilkan status di halaman pendataan
             />
           ))}
         </section>

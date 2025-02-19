@@ -2,7 +2,7 @@ import axios from "axios";
 import { https } from "./url";
 import { getToken } from "../helpers/LocalStorage";
 
-//Auth
+// Auth
 export const handleLogin = async (username, password) => {
   const apiLogin = await axios
     .post(https + "/auth/user", {
@@ -35,7 +35,7 @@ export const handleLoginAdmin = async (username, password) => {
 
 export const handleRegister = async (userData) => {
   const apiRegister = await axios
-    .post(https + "/user/register", userData)
+    .post("https://apilelang.umixstudio.web.id/user", userData)
     .then((response) => {
       return response;
     })
@@ -45,7 +45,26 @@ export const handleRegister = async (userData) => {
   return apiRegister;
 };
 
-//Admin
+export const getUser = async () => {
+  try {
+    const token = getToken();
+    console.log("Token yang digunakan:", token); // Debugging
+
+    const response = await axios.get(https + '/user', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error saat mengambil data user:", error.response || error);
+    return error.response ? error.response.data : { error: "Terjadi kesalahan" };
+  }
+};
+
+// Admin
 export const getBarang = async () => {
   const token = getToken();
 
@@ -125,3 +144,57 @@ export const getLelang = async () => {
     return error.response;
   });
 };
+
+// Function to add Lelang data
+export const addLelang = async (lelang) => {
+  const token = getToken();
+
+  try {
+    const response = await axios.post(https + "/lelang", lelang, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+// Function to delete Lelang data
+export const deleteLelang = async (id_lelang) => {
+  const token = getToken();
+
+  try {
+    const response = await axios.delete(https + `/lelang/${id_lelang}`, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+// Function to update Lelang status
+export const updateLelangStatus = async (id_lelang, tgl_lelang, status) => {
+  const token = getToken();
+
+  try {
+    const response = await axios.put(https + `/lelang/${id_lelang}`,{
+    id_barang: 1,
+    tgl_lelang: tgl_lelang,
+    status: status
+    }, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+

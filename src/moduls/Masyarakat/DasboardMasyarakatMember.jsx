@@ -14,6 +14,7 @@ const MainLayoutsMasyarakatMember = () => {
   const [showBidPopup, setShowBidPopup] = useState(false);
   const [bidPrice, setBidPrice] = useState("");
   const { dataLelang, handleGetLelang } = useLelang();
+  const [selectedLelangStatus, setSelectedLelangStatus] = useState("");
 
   useEffect(() => {
     handleGetLelang();
@@ -33,7 +34,8 @@ const MainLayoutsMasyarakatMember = () => {
     setShowHistoryPopup(false);
   };
 
-  const handleBid = () => {
+  const handleBid = (status) => {
+    setSelectedLelangStatus(status);
     setShowBidPopup(true);
   };
 
@@ -61,14 +63,14 @@ const MainLayoutsMasyarakatMember = () => {
           </div>
         </div>
 
-        <div className="bg-blue-500 text-white p-4 flex justify-between items-center mt-4 rounded-lg shadow-md">
+        <div className="bg-blue-main text-white p-4 flex justify-between items-center mt-4 rounded-lg shadow-md">
           <div className="flex items-center">
             <div>
               <h1 className="text-xl font-bold">Hallo, Selamat Datang!</h1>
               <p>Mau lelang? hubungi kami sekarang</p>
             </div>
           </div>
-          <button className="bg-blue-300 text-blue-700 p-2 rounded-lg shadow-md">Hubungi</button>
+          <button className="bg-blue-dark text-blue-main p-2 rounded-lg shadow-md">Hubungi</button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2">
           {Array.isArray(dataLelang) && dataLelang.map((lelang) => (
@@ -76,13 +78,14 @@ const MainLayoutsMasyarakatMember = () => {
               key={lelang.id_lelang}
               isMasyarakatPage={true}
               onHistory={handleHistory}
-              onTawar={handleBid} // Gunakan handleBid di sini
+              onTawar={() => handleBid(lelang.status)} // Gunakan handleBid di sini
               isLoggedin={isLoggedin} // Tambahkan status login
               title={lelang.nama_barang}
               description={lelang.deskripsi_barang}
               date={lelang.tgl_lelang}
               price={lelang.harga_awal}
               imageUrl={lelang.gambar} // URL gambar jika tersedia
+              status={lelang.status} // Tambahkan status lelang
             />
           ))}
         </div>
@@ -98,6 +101,7 @@ const MainLayoutsMasyarakatMember = () => {
             setBidPrice={setBidPrice}
             closeBidPopup={closeBidPopup}
             submitBid={submitBid}
+            lelangStatus={selectedLelangStatus} // Tambahkan status lelang
           />
         )}
       </section>

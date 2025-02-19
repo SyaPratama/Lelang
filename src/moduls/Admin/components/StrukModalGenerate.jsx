@@ -23,7 +23,7 @@ const StrukModalGenerate = ({ isModalOpen, handleCloseModal, generatePDF, select
           {showButton && (
             <div className="flex items-center justify-between mt-6">
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-blue-main hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onClick={generatePDF}
               >
                 Generate PDF

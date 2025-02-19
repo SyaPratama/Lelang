@@ -9,7 +9,7 @@ const HistoryPenawaran = ({ historyData, closePopup }) => {
             </button>
             <h3 className="text-center mb-4 font-semibold text-lg">History Penawaran</h3>
             {historyData.map((data, index) => (
-                <div key={index} className={`mb-2 p-2 ${index === 2 ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-500'} rounded-md`}>
+                <div key={index} className={`mb-2 p-2 ${index === 2 ? 'bg-blue-main text-white' : 'bg-[#0077b0] text-white'} rounded-md`}>
                     <div><strong>{data.name}</strong></div>
                     <div>Nawar {data.nawar}</div>
                 </div>
