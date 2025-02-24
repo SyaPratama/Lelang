@@ -189,6 +189,7 @@ export const updateLelangStatus = async (data, token) => {
   }
 };
 
+// Function to add Penawaran
 export const addPenawaran = async (id, token, nominal) => {
   try {
     const response = await axios.post(
@@ -200,6 +201,38 @@ export const addPenawaran = async (id, token, nominal) => {
         },
       }
     );
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+// Function to edit Penawaran
+export const editPenawaran = async (idLelang, idPenawaran, token, nominal) => {
+  try {
+    const response = await axios.put(
+      `${https}/${idLelang}/penawaran/${idPenawaran}`,
+      { nominal },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+// Function to delete Penawaran
+export const deletePenawaran = async (idPenawaran, token) => {
+  try {
+    const response = await axios.delete(`${https}/penawaran/${idPenawaran}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response;
   } catch (error) {
     return error.response.data;

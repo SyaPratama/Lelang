@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran } from "../../../config/api"; // Sesuaikan dengan path untuk getBarang, addBarang, editBarang, deleteBarang, dan getLelang
+import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, editPenawaran, deletePenawaran, getPenawaran } from "../../../config/api"; // Sesuaikan dengan path untuk getBarang, addBarang, editBarang, deleteBarang, dan getLelang
 import { useCookies } from "react-cookie";
 import { useAuth } from "../../../Auth/AuthContext";
 
@@ -18,6 +18,8 @@ const initialLelang = {
   handleDeleteLelang: () => { }, // Tambahkan fungsi untuk menghapus data lelang
   handleUpdateLelangStatus: () => { }, // Tambahkan fungsi untuk memperbarui status lelang
   handleAddPenawaran: () => {},
+  handleEditPenawaran: () => {},
+  handleDeletePenawaran: () => {},
   handleGetPenawaran: () => {},
 };
 
@@ -62,6 +64,30 @@ const LelangProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Failed to add Penawaran:", error);
+    }
+  };
+
+  const handleEditPenawaran = async (idLelang, idPenawaran, nominal) => {
+    try {
+      const response = await editPenawaran(idLelang, idPenawaran, token, nominal);
+      if (response.status === 200) {
+        handleGetPenawaran(); // Perbarui daftar penawaran setelah berhasil mengedit penawaran
+        setHandleFetch(true);
+      }
+    } catch (error) {
+      console.error("Failed to edit Penawaran:", error);
+    }
+  };
+
+  const handleDeletePenawaran = async (idPenawaran) => {
+    try {
+      const response = await deletePenawaran(idPenawaran, token);
+      if (response.status === 200) {
+        handleGetPenawaran(); // Perbarui daftar penawaran setelah berhasil menghapus penawaran
+        setHandleFetch(true);
+      }
+    } catch (error) {
+      console.error("Failed to delete Penawaran:", error);
     }
   };
 
@@ -207,7 +233,7 @@ const LelangProvider = ({ children }) => {
   }, [handleFetch,barang]);
 
   return (
-    <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus }}>
+    <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleAddPenawaran, handleEditPenawaran, handleDeletePenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus }}>
       {children}
     </LelangContext.Provider>
   );

@@ -13,13 +13,14 @@ const MainLayoutsMasyarakatMember = () => {
   const [selectedHistory, setSelectedHistory] = useState([]);
   const [showBidPopup, setShowBidPopup] = useState(false);
   const [bidPrice, setBidPrice] = useState("");
-  const { dataLelang, handleGetLelang, handleAddPenawaran, handleGetPenawaran, penawaran } = useLelang();
+  const { dataLelang, handleGetLelang, handleAddPenawaran, handleEditPenawaran, handleGetPenawaran, handleDeletePenawaran, penawaran } = useLelang();
   const [selectedLelangStatus, setSelectedLelangStatus] = useState("");
   const [selectedLelangId, setSelectedLelangId] = useState(null);
+  const [selectedPenawaranId, setSelectedPenawaranId] = useState(null);
 
   useEffect(() => {
     handleGetLelang();
-  }, [dataLelang]);
+  }, []);
 
   useEffect(() => {
     handleGetPenawaran();
@@ -36,6 +37,14 @@ const MainLayoutsMasyarakatMember = () => {
   };
 
   const handleBid = (id, status) => {
+    const existingBid = penawaran.find(p => p.id_lelang === id);
+    if (existingBid) {
+      // Notify user and ask if they want to update the bid
+      if (window.confirm("You have already placed a bid. Do you want to update it?")) {
+        setSelectedPenawaranId(existingBid.id_penawaran);
+        setBidPrice(existingBid.nominal);
+      }
+    }
     setSelectedLelangId(id);
     setSelectedLelangStatus(status);
     setShowBidPopup(true);
@@ -43,15 +52,30 @@ const MainLayoutsMasyarakatMember = () => {
 
   const closeBidPopup = () => {
     setShowBidPopup(false);
+    setBidPrice("");
+    setSelectedPenawaranId(null);
   };
 
   const submitBid = async () => {
     try {
-      await handleAddPenawaran(selectedLelangId, bidPrice);
+      if (selectedPenawaranId) {
+        await handleEditPenawaran(selectedLelangId, selectedPenawaranId, bidPrice);
+      } else {
+        await handleAddPenawaran(selectedLelangId, bidPrice);
+      }
       console.log("Bid submitted:", bidPrice);
       setShowBidPopup(false);
     } catch (error) {
       console.error("Failed to submit bid:", error);
+    }
+  };
+
+  const deleteBid = async (idPenawaran) => {
+    try {
+      await handleDeletePenawaran(idPenawaran);
+      console.log("Bid deleted:", idPenawaran);
+    } catch (error) {
+      console.error("Failed to delete bid:", error);
     }
   };
 
@@ -106,6 +130,7 @@ const MainLayoutsMasyarakatMember = () => {
           <HistoryPenawaran
             historyData={selectedHistory}
             closePopup={closeHistoryPopup}
+            deleteBid={deleteBid}
           />
         )}
         {showBidPopup && (
