@@ -1,6 +1,5 @@
 import axios from "axios";
 import { https } from "./url";
-import { getToken } from "../helpers/LocalStorage";
 
 // Auth
 export const handleLogin = async (username, password) => {
@@ -35,19 +34,24 @@ export const handleLoginAdmin = async (username, password) => {
 
 export const handleRegister = async (userData) => {
   const apiRegister = await axios
-    .post("https://apilelang.umixstudio.web.id/user", userData)
+    .post(https + "/user/register", userData)
     .then((response) => {
       return response;
     })
     .catch((error) => {
+      if (error.response && error.response.status === 409) {
+        return {
+          status: 409,
+          message: "Username or email already exists.",
+        };
+      }
       return error.response;
     });
   return apiRegister;
 };
 
-export const getUser = async () => {
+export const getUser = async (token) => {
   try {
-    const token = getToken();
     console.log("Token yang digunakan:", token); // Debugging
 
     const response = await axios.get(https + '/user', {
@@ -65,9 +69,7 @@ export const getUser = async () => {
 };
 
 // Admin
-export const getBarang = async () => {
-  const token = getToken();
-
+export const getBarang = async (token) => {
   return axios.get(https + '/barang', {
     headers: {
       'Authorization': 'Bearer ' + token,
@@ -81,13 +83,12 @@ export const getBarang = async () => {
   });
 };
 
-export const addBarang = async (barang) => {
-  const token = getToken();
-
+export const addBarang = async (barang, token) => {
   try {
     const response = await axios.post(https + "/barang", barang, {
       headers: {
         'Authorization': 'Bearer ' + token,
+        "Content-Type":"multipart/form-data"
       }
     });
     return response;
@@ -96,13 +97,12 @@ export const addBarang = async (barang) => {
   }
 };
 
-export const editBarang = async (id_barang, barang) => {
-  const token = getToken();
-
+export const editBarang = async (id_barang, barang, token) => {
   try {
     const response = await axios.put(https + `/barang/${id_barang}`, barang, {
       headers: {
         'Authorization': 'Bearer ' + token,
+        "Content-Type":"multipart/form-data"
       }
     });
     return response;
@@ -111,9 +111,7 @@ export const editBarang = async (id_barang, barang) => {
   }
 };
 
-export const deleteBarang = async (id_barang) => {
-  const token = getToken();
-
+export const deleteBarang = async (id_barang, token) => {
   try {
     const response = await axios.delete(https + `/barang/${id_barang}`, {
       headers: {
@@ -127,9 +125,7 @@ export const deleteBarang = async (id_barang) => {
 };
 
 // New function to get Lelang data
-export const getLelang = async () => {
-  const token = getToken();
-
+export const getLelang = async (token) => {
   return axios.get(https + '/lelang', {
     headers: {
       'Authorization': 'Bearer ' + token,
@@ -146,9 +142,7 @@ export const getLelang = async () => {
 };
 
 // Function to add Lelang data
-export const addLelang = async (lelang) => {
-  const token = getToken();
-
+export const addLelang = async (lelang, token) => {
   try {
     const response = await axios.post(https + "/lelang", lelang, {
       headers: {
@@ -162,9 +156,7 @@ export const addLelang = async (lelang) => {
 };
 
 // Function to delete Lelang data
-export const deleteLelang = async (id_lelang) => {
-  const token = getToken();
-
+export const deleteLelang = async (id_lelang, token) => {
   try {
     const response = await axios.delete(https + `/lelang/${id_lelang}`, {
       headers: {
@@ -178,14 +170,13 @@ export const deleteLelang = async (id_lelang) => {
 };
 
 // Function to update Lelang status
-export const updateLelangStatus = async (id_lelang, tgl_lelang, status) => {
-  const token = getToken();
-
+export const updateLelangStatus = async (data, token) => {
   try {
-    const response = await axios.put(https + `/lelang/${id_lelang}`,{
-    id_barang: 1,
-    tgl_lelang: tgl_lelang,
-    status: status
+    console.trace(data);
+    const response = await axios.put(https + `/lelang/${data.id_lelang}`,{
+    id_barang: data.id_barang,
+    tgl_lelang: data.tgl_lelang,
+    status: data.status
     }, {
       headers: {
         'Authorization': 'Bearer ' + token,
@@ -198,3 +189,35 @@ export const updateLelangStatus = async (id_lelang, tgl_lelang, status) => {
   }
 };
 
+export const addPenawaran = async (id, token, nominal) => {
+  try {
+    const response = await axios.post(
+      `${https}/${id}/penawaran`,
+      { nominal },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const getPenawaran = async (token) => {
+  return axios.get(https + '/penawaran', {
+    headers: {
+      'Authorization': 'Bearer ' + token,
+    }
+  })
+  .then((response) => {
+    console.log("API Response:", response);
+    return response;
+  })
+  .catch((error) => {
+    console.error("API Error:", error);
+    return error.response;
+  });
+};

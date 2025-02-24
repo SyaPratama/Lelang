@@ -1,19 +1,24 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser } from "../../../config/api"; // Sesuaikan dengan path untuk getBarang, addBarang, editBarang, deleteBarang, dan getLelang
+import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran } from "../../../config/api"; // Sesuaikan dengan path untuk getBarang, addBarang, editBarang, deleteBarang, dan getLelang
+import { useCookies } from "react-cookie";
+import { useAuth } from "../../../Auth/AuthContext";
 
 const initialLelang = {
   barang: [],
   dataLelang: [], // Menambahkan state untuk data lelang
-  handleGetUser: () => {},
-  handleGetBarang: () => {},
-  handleAddBarang: () => {}, 
-  handleEditBarang: () => {}, // Tambahkan fungsi untuk mengedit barang
-  handleDeleteBarang: () => {}, // Tambahkan fungsi untuk menghapus barang
-  handleGetLelang: () => {}, // Tambahkan fungsi untuk mendapatkan data lelang
-  handleAddLelang: () => {}, // Tambahkan fungsi untuk menambah data lelang
-  handleDeleteLelang: () => {}, // Tambahkan fungsi untuk menghapus data lelang
-  handleUpdateLelangStatus: () => {}, // Tambahkan fungsi untuk memperbarui status lelang
+  penawaran: [],
+  handleGetUser: () => { },
+  handleGetBarang: () => { },
+  handleAddBarang: () => { },
+  handleEditBarang: () => { }, // Tambahkan fungsi untuk mengedit barang
+  handleDeleteBarang: () => { }, // Tambahkan fungsi untuk menghapus barang
+  handleGetLelang: () => { }, // Tambahkan fungsi untuk mendapatkan data lelang
+  handleAddLelang: () => { }, // Tambahkan fungsi untuk menambah data lelang
+  handleDeleteLelang: () => { }, // Tambahkan fungsi untuk menghapus data lelang
+  handleUpdateLelangStatus: () => { }, // Tambahkan fungsi untuk memperbarui status lelang
+  handleAddPenawaran: () => {},
+  handleGetPenawaran: () => {},
 };
 
 // Buat context
@@ -26,16 +31,43 @@ const useLelang = () => {
 
 // Buat provider
 const LelangProvider = ({ children }) => {
+  const { token } = useAuth();
   const [barang, setBarang] = useState([]);
+  const [penawaran, setPenawaran] = useState([]);
   const [dataLelang, setDataLelang] = useState([]); // Tambahkan state untuk data lelang
   const [isAddingLelang, setIsAddingLelang] = useState(false);
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
+  const [handleFetch, setHandleFetch] = useState(false);
 
   console.log("Data Lelang:", dataLelang);
 
+  const handleGetPenawaran = async () => {
+    try {
+      const response = await getPenawaran(token);
+      const { data } = response.data;
+      setPenawaran(data.dataPenawaran);
+      console.log(data.dataPenawaran);
+    } catch (error) {
+      console.error("Failed to fetch penawaran:", error);
+      setPenawaran([]); // Set penawaran sebagai array kosong jika gagal
+    }
+  };
+
+  const handleAddPenawaran = async (id, nominal) => {
+    try {
+      const response = await addPenawaran(id, token, nominal);
+      if (response.status === 201) {
+        handleGetPenawaran(); // Perbarui daftar penawaran setelah berhasil menambah penawaran
+        setHandleFetch(true)
+      }
+    } catch (error) {
+      console.error("Failed to add Penawaran:", error);
+    }
+  };
+
   const handleGetUser = async () => {
     try {
-      const response = await getUser();
+      const response = await getUser(token);
       const users = response.data.data.dataUser; // Sesuaikan struktur data
       setUsers(users);
     } catch (error) {
@@ -46,9 +78,10 @@ const LelangProvider = ({ children }) => {
 
   const handleGetBarang = async () => {
     try {
-      const response = await getBarang();
+      const response = await getBarang(token);
       const { data } = response.data;
-      setBarang(data.barang); // Sesuaikan response dengan struktur data yang diambil
+      setBarang(data.barang);
+      console.log(data.barang)
     } catch (error) {
       console.error("Failed to fetch barang:", error);
       setBarang([]); // Set barang sebagai array kosong jika gagal
@@ -57,9 +90,10 @@ const LelangProvider = ({ children }) => {
 
   const handleAddBarang = async (barang) => {
     try {
-      const response = await addBarang(barang);
-      if (response.status === 200) {
+      const response = await addBarang(barang, token);
+      if (response.status === 201) {
         handleGetBarang(); // Perbarui daftar barang setelah berhasil menambah barang
+        setHandleFetch(true)
       }
     } catch (error) {
       console.error("Failed to add barang:", error);
@@ -68,9 +102,10 @@ const LelangProvider = ({ children }) => {
 
   const handleEditBarang = async (id_barang, barang) => {
     try {
-      const response = await editBarang(id_barang, barang);
-      if (response.status === 200) {
+      const response = await editBarang(id_barang, barang, token);
+      if (response.status === 201) {
         handleGetBarang(); // Perbarui daftar barang setelah berhasil mengedit barang
+        setHandleFetch(true)
       }
     } catch (error) {
       console.error("Failed to edit barang:", error);
@@ -79,8 +114,8 @@ const LelangProvider = ({ children }) => {
 
   const handleDeleteBarang = async (id_barang) => {
     try {
-      const response = await deleteBarang(id_barang);
-      if (response.status === 200) {
+      const response = await deleteBarang(id_barang, token);
+      if (response.status === 201) {
         handleGetBarang(); // Perbarui daftar barang setelah berhasil menghapus barang
       }
     } catch (error) {
@@ -90,11 +125,11 @@ const LelangProvider = ({ children }) => {
 
   const handleGetLelang = async () => {
     try {
-      const responseLelang = await getLelang();
-      const responseBarang = await getBarang();
+      const responseLelang = await getLelang(token);
+      const responseBarang = await getBarang(token);
       const lelangData = responseLelang.data.data.dataLelang;
       const barangData = responseBarang.data.data.barang;
-      
+
       const combinedData = lelangData.map(lelang => {
         const barang = barangData.find(b => b.id_barang === lelang.id_barang);
         return { ...lelang, ...barang };
@@ -112,7 +147,7 @@ const LelangProvider = ({ children }) => {
     if (isAddingLelang) return; // Prevent spamming
     setIsAddingLelang(true);
     try {
-      const response = await addLelang(lelang);
+      const response = await addLelang(lelang, token);
       if (response.status === 200 || response.status === 201) {
         await handleGetLelang(); // Perbarui daftar lelang setelah berhasil menambah lelang
         Swal.fire("Berhasil", "Barang berhasil ditambahkan ke lelang", "success");
@@ -129,10 +164,11 @@ const LelangProvider = ({ children }) => {
 
   const handleDeleteLelang = async (id_lelang) => {
     try {
-      const response = await deleteLelang(id_lelang);
+      const response = await deleteLelang(id_lelang, token);
       if (response.status === 200) {
         await handleGetLelang(); // Perbarui daftar lelang setelah berhasil menghapus lelang
         Swal.fire("Berhasil", "Lelang berhasil dihapus", "success");
+        setHandleFetch(true);
       } else {
         Swal.fire("Gagal", "Gagal menghapus lelang", "error");
       }
@@ -142,11 +178,12 @@ const LelangProvider = ({ children }) => {
     }
   };
 
-  const handleUpdateLelangStatus = async (id_lelang, tgl_lelang, status) => {
+  const handleUpdateLelangStatus = async (data) => {
     try {
-      const response = await updateLelangStatus(id_lelang, tgl_lelang, status);
+      const response = await updateLelangStatus(data, token);
       if (response.status === 200 || response.status === 201) {
         await handleGetLelang(); // Perbarui daftar lelang setelah berhasil memperbarui status lelang
+        setHandleFetch(true);
         Swal.fire("Berhasil", "Status lelang berhasil diperbarui", "success");
       } else {
         Swal.fire("Gagal", "Gagal memperbarui status lelang", "error");
@@ -158,13 +195,19 @@ const LelangProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    handleGetBarang();
-    handleGetLelang();
-    handleGetUser() // Panggil fungsi untuk mendapatkan data lelang saat komponen pertama kali di-mount
-  }, []);
+    if (handleFetch) {
+      handleGetBarang();
+      handleGetLelang();
+      handleGetUser();
+      handleGetPenawaran()
+      setTimeout(() => {
+        setHandleFetch(false);
+      }, 300)
+    }
+  }, [handleFetch,barang]);
 
   return (
-    <LelangContext.Provider value={{ barang, dataLelang, users, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus }}>
+    <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus }}>
       {children}
     </LelangContext.Provider>
   );

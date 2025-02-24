@@ -7,7 +7,7 @@ const FormPendataan = ({ handleClose, selectedItem }) => {
   const [tanggal, setTanggal] = useState("");
   const [hargaPenawaran, setHargaPenawaran] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
-  const [gambar, setGambar] = useState(null);
+  const [foto, setFoto] = useState(null);
 
   useEffect(() => {
     if (selectedItem) {
@@ -22,6 +22,7 @@ const FormPendataan = ({ handleClose, selectedItem }) => {
     e.preventDefault();
 
     const newBarang = {
+      foto: foto,
       nama_barang: namaBarang,
       tanggal,
       harga_awal: hargaPenawaran,
@@ -50,10 +51,10 @@ const FormPendataan = ({ handleClose, selectedItem }) => {
             <div className="relative">
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="gambar"
+                id="foto"
                 type="file"
                 placeholder="Upload"
-                onChange={(e) => setGambar(e.target.files[0])}
+                onChange={(e) => setFoto(e.target.files[0])}
               />
             </div>
           </div>

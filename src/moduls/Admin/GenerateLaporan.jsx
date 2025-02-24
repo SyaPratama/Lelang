@@ -47,8 +47,6 @@ function GenerateLaporan() {
           <div className="order-3 col-span-8 lg:col-span-4 lg:order-3">
             <Search />
           </div>
-          <div className="order-4 col-span-2 lg:col-span-2 lg:order-4 flex justify-start items-start">
-          </div>
         </div>
 
       <TableGenerate handleCetakClick={handleCetakClick} />

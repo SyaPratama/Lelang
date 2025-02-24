@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import Card from "./components/Card";
@@ -23,6 +24,7 @@ function PendataanBarang() {
     const item = barang.find((b) => b.id_barang === id_barang);
     setSelectedItem(item); // Set item yang dipilih ke state
     setIsModalOpen(true); // Buka modal form
+    handleEditBarang(selectedItem);
   };
 
   const handleLelang = async (id_barang) => {
@@ -51,7 +53,7 @@ function PendataanBarang() {
 
   return (
     <>
-      <section>
+      <section className="pb-[50px]">
         <Header title="Pendataan Barang" />
         <div className="grid grid-cols-12 gap-2 w-full pt-2">
           <div className="order-3 col-span-8 lg:col-span-4 lg:order-3">
@@ -78,7 +80,8 @@ function PendataanBarang() {
               description={item.deskripsi_barang}
               price={item.harga_awal}
               date={item.tanggal}
-              imageUrl={item.gambar} // Tambahkan URL gambar jika tersedia
+              imageUrl={item.foto} // Tambahkan URL gambar jika tersedia
+              status={item.status} // Tambahkan status barang
               hideStatus={true} // Jangan tampilkan status di halaman pendataan
             />
           ))}

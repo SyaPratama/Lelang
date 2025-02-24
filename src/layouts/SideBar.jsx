@@ -65,7 +65,7 @@ const SideBar = () => {
 
       {/* Bottom Navbar for Mobile */}
       {isMobile && (
-        <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-blue-main border-t border-gray-200  flex justify-around items-center">
+        <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-blue-main border-t border-gray-200 flex justify-around items-center">
           <NavLink 
             to="/dasboard-admin" 
             className={({ isActive }) => `flex flex-col items-center text-white p-2 rounded-sm ${isActive ? 'text-blue-600 bg-blue-dark' : 'hover-side'}`}

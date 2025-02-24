@@ -11,23 +11,27 @@ const Registrasi = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const userData = {
       nama_lengkap: namaLengkap,
       username: username,
       password: password,
       telp: telp,
     };
-
+  
     try {
       const response = await handleRegister(userData);
-
+  
       if (response.status !== 200) {
-        throw new Error('Registration failed');
+        if (response.status === 409) {
+          alert('Registration failed: ' + response.message);
+        } else {
+          throw new Error('Registration failed');
+        }
+      } else {
+        alert('Registration successful!');
+        navigate('/login'); // Arahkan ke halaman login setelah berhasil mendaftar
       }
-
-      alert('Registration successful!');
-      navigate('/login'); // Arahkan ke halaman login setelah berhasil mendaftar
     } catch (error) {
       alert('Registration failed: ' + error.message);
     }

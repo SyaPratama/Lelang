@@ -3,6 +3,10 @@
 @source "../node_modules/flowbite";
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
 
+.root {
+    --breakpoint-xs: 800px;
+}
+
 .bg-blue-main{
     background-color: #005f8f;
 }
@@ -34,4 +38,48 @@ body {
     background-color: #F4f4f4;
 }
 
+.card {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  
+  .card-img-top {
+    width: 100%;
+    height: auto;
+  }
+  
+  .card-body {
+    padding: 16px;
+  }
+  
+  .card .btn-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  
+  .pending-animation {
+    animation: pulse 2s infinite;
+  }
+
+  @media (min-width: var(--breakpoint-xs)) {
+    .xs\\:flex-row {
+      flex-direction: row;
+    }
+  }
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 10px 20px rgba(255, 0, 0, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+  }
 

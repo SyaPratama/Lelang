@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { handleLogin, handleLoginAdmin } from "../config/api";
-import { getToken, removeToken, saveToken } from "../helpers/LocalStorage";
+import { useCookies } from "react-cookie";
+
 
 const initialAuthState = {
+  token: null,
   isLoggedin: false,
   authority: "",
   name: "",
@@ -28,6 +30,10 @@ const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [role, setRole] = useState(""); // "Admin" atau "User"
   const [name, setName] = useState("");
+  const [token,setToken] = useState(null);
+  const [cookies,setCookie,removeCookie] = useCookies(['LOGIN_STATE'],{
+    doNotParse: true
+  });
 
   // Simpan role ke localStorage
   const saveRole = (role) => localStorage.setItem("role", role);
@@ -66,7 +72,11 @@ const AuthProvider = ({ children }) => {
         throw new Error(message || "Login gagal!");
       }
   
-      saveToken(data.token);
+      setCookie('LOGIN_STATE',data.token,{
+        path: '/',
+        expires: new Date(Date.now()+(24 * 60 * 60 * 1000))
+      });
+      setToken(data.token);
       saveUserName(username);
       saveRole("User");
   
@@ -118,7 +128,11 @@ const AuthProvider = ({ children }) => {
         throw new Error(message || "Login gagal!");
       }
 
-      saveToken(data.token);
+      setToken(data.token);
+      setCookie('LOGIN_STATE',data.token,{
+        path: '/',
+        expires: new Date(Date.now()+(24 * 60 * 60 * 1000)) 
+      });
       saveUserName(username);
       saveRole("Admin");
 
@@ -158,7 +172,8 @@ const AuthProvider = ({ children }) => {
       cancelButtonText: "Batal",
     }).then((result) => {
       if (result.isConfirmed) {
-        removeToken();
+        setToken(null);
+        removeCookie('LOGIN_STATE')
         removeRole();
         removeUserName();
 
@@ -181,11 +196,12 @@ const AuthProvider = ({ children }) => {
 
   // ✅ Cek Status Login saat Halaman Dimuat Ulang
   useEffect(() => {
-    const token = getToken();
+    const token = cookies?.LOGIN_STATE;
     const Role = getRole();
     const Name = getUserName();
 
     if (token && Role) {
+      setToken(token);
       setName(Name);
       setIsLoggedin(true);
       setRole(Role);
@@ -195,6 +211,7 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ isLoggedin,
+      token: token,
       isLoading,
       role,
       authority,

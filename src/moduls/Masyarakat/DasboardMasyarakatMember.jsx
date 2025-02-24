@@ -13,19 +13,20 @@ const MainLayoutsMasyarakatMember = () => {
   const [selectedHistory, setSelectedHistory] = useState([]);
   const [showBidPopup, setShowBidPopup] = useState(false);
   const [bidPrice, setBidPrice] = useState("");
-  const { dataLelang, handleGetLelang } = useLelang();
+  const { dataLelang, handleGetLelang, handleAddPenawaran, handleGetPenawaran, penawaran } = useLelang();
   const [selectedLelangStatus, setSelectedLelangStatus] = useState("");
+  const [selectedLelangId, setSelectedLelangId] = useState(null);
 
   useEffect(() => {
     handleGetLelang();
+  }, [dataLelang]);
+
+  useEffect(() => {
+    handleGetPenawaran();
   }, []);
 
-  const handleHistory = () => {
-    const historyData = [
-      { name: 'Denis', nawar: '6.000.000.000' },
-      { name: 'Adit', nawar: '7.000.000.000' },
-      { name: 'CRABS', nawar: '50.000.000.000' }
-    ];
+  const handleHistory = (idLelang) => {
+    const historyData = penawaran.filter(p => p.id_lelang === idLelang);
     setSelectedHistory(historyData);
     setShowHistoryPopup(true);
   };
@@ -34,7 +35,8 @@ const MainLayoutsMasyarakatMember = () => {
     setShowHistoryPopup(false);
   };
 
-  const handleBid = (status) => {
+  const handleBid = (id, status) => {
+    setSelectedLelangId(id);
     setSelectedLelangStatus(status);
     setShowBidPopup(true);
   };
@@ -43,10 +45,20 @@ const MainLayoutsMasyarakatMember = () => {
     setShowBidPopup(false);
   };
 
-  const submitBid = () => {
-    // Handle bid submission logic here
-    console.log("Bid submitted:", bidPrice);
-    setShowBidPopup(false);
+  const submitBid = async () => {
+    try {
+      await handleAddPenawaran(selectedLelangId, bidPrice);
+      console.log("Bid submitted:", bidPrice);
+      setShowBidPopup(false);
+    } catch (error) {
+      console.error("Failed to submit bid:", error);
+    }
+  };
+
+  const getHighestBid = (idLelang) => {
+    const bids = penawaran.filter(p => p.id_lelang === idLelang);
+    if (bids.length === 0) return null;
+    return bids.reduce((prev, current) => (prev.nominal > current.nominal) ? prev : current);
   };
 
   return (
@@ -77,15 +89,16 @@ const MainLayoutsMasyarakatMember = () => {
             <Card
               key={lelang.id_lelang}
               isMasyarakatPage={true}
-              onHistory={handleHistory}
-              onTawar={() => handleBid(lelang.status)} // Gunakan handleBid di sini
+              onHistory={() => handleHistory(lelang.id_lelang)}
+              onTawar={() => handleBid(lelang.id_lelang, lelang.status)} // Gunakan handleBid di sini
               isLoggedin={isLoggedin} // Tambahkan status login
               title={lelang.nama_barang}
               description={lelang.deskripsi_barang}
               date={lelang.tgl_lelang}
               price={lelang.harga_awal}
-              imageUrl={lelang.gambar} // URL gambar jika tersedia
-              status={lelang.status} // Tambahkan status lelang
+              imageUrl={lelang.foto}
+              status={lelang.status}
+              highestBid={getHighestBid(lelang.id_lelang)}
             />
           ))}
         </div>
@@ -101,7 +114,7 @@ const MainLayoutsMasyarakatMember = () => {
             setBidPrice={setBidPrice}
             closeBidPopup={closeBidPopup}
             submitBid={submitBid}
-            lelangStatus={selectedLelangStatus} // Tambahkan status lelang
+            lelangStatus={selectedLelangStatus}
           />
         )}
       </section>

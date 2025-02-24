@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Auth/AuthContext"; // Sesuaikan dengan path yang benar
@@ -52,7 +53,7 @@ const Logout = () => {
                 <div className="px-4 py-3">
                   <p className="text-sm text-gray-900">{name}</p> {/* Menampilkan nama pengguna */}
                   <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-900">
-                    {users.telp}
+                    
                   </p>
                 </div>
                 <ul className="py-1">
