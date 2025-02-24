@@ -189,22 +189,41 @@ export const updateLelangStatus = async (data, token) => {
   }
 };
 
-export const addPenawaran = async (id, token, nominal) => {
-  try {
-    const response = await axios.post(
-      `${https}/${id}/penawaran`,
-      { nominal },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response;
-  } catch (error) {
-    return error.response.data;
-  }
-};
+
+
+// Function to delete Penawaran
+// export const deletePenawaran = async (id_penawaran, token) => {
+//   try {
+//     const response = await axios.delete(https + `/penawaran/${id_penawaran}`, {
+//       headers: {
+//         'Authorization': 'Bearer ' + token,
+//       }
+//     });
+//     return response;
+//   } catch (error) {
+//     return error.response.data;
+//   }
+// };
+
+
+// export const addPenawaran = async (id, token, nominal) => {
+//   try {
+//     const response = await axios.post(
+//       `${https}/${id}/penawaran`,
+//       { nominal },
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       }
+//     );
+//     return response;
+//   } catch (error) {
+//     return error.response.data;
+//   }
+// };
+
+
 
 export const getPenawaran = async (token) => {
   return axios.get(https + '/penawaran', {
@@ -220,4 +239,68 @@ export const getPenawaran = async (token) => {
     console.error("API Error:", error);
     return error.response;
   });
+};
+
+
+// export const editPenawaran = async (id_lelang, id_penawaran, token, nominal) => {
+//   try {
+//     const response = await axios.put(https + `/${id_lelang}/penawaran/${id_penawaran}`, 
+//     { nominal },
+//     {
+//       headers: {
+//         'Authorization': 'Bearer ' + token,
+//       }
+//     });
+//     return response;
+//   } catch (error) {
+//     return error.response.data;
+//   }
+// };
+
+export const editPenawaran = async (id_lelang, id_penawaran, token, nominal) => {
+  try {
+    const response = await axios.put(https + `/${id_lelang}/penawaran/${id_penawaran}`, 
+    { nominal },
+    {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+// Function to delete Penawaran
+export const deletePenawaran = async (id_penawaran, token) => {
+  try {
+    const response = await axios.delete(https + `/penawaran/${id_penawaran}`, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+// ...
+
+export const addPenawaran = async (id, token, nominal) => {
+  try {
+    const response = await axios.post(
+      `${https}/${id}/penawaran`,
+      { nominal },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
 };

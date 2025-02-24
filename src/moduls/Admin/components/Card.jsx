@@ -19,9 +19,11 @@ const Card = ({
   imageUrl,
   isLoggedin,
   onTawar,
+  onEditBid,
   status,
   highestBid,
-  hideStatus
+  hideStatus,
+  hasBid
 }) => {
   const handleStatusChange = (status) => {
     onUpdateStatus(status);
@@ -36,7 +38,6 @@ const Card = ({
           <img className="rounded-t-lg w-100 mx-auto pt-4 pl-1" src={`${https}/file/${imageUrl}`} alt={title} />
         </a>
         <div className="p-5 flex flex-col justify-between sm:flex-row">
-
           <div>
             {!hideStatus && (
               <div className={`px-3 w-[62px] py-1 rounded-full text-white text-xs ${status === 'dibuka' ? 'bg-green-500' : 'bg-red-500'}`}>
@@ -95,10 +96,10 @@ const Card = ({
                 <>
                   <div className="flex flex-col">
                     <button
-                      onClick={isLoggedin ? onTawar : handleLoginDulu}
-                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300"
+                      onClick={isLoggedin ? (hasBid ? onEditBid : onTawar) : handleLoginDulu}
+                      className={`flex items-center gap-1 px-3 py-2 text-sm font-medium text-white ${hasBid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-orange-600 hover:bg-orange-700'} focus:ring-4 focus:outline-none ${hasBid ? 'focus:ring-blue-300' : 'focus:ring-orange-300'}`}
                     >
-                      Tawar Harga
+                      {hasBid ? 'Edit' : 'Tawar Harga'}
                     </button>
                     {/* Tombol Lihat Histori */}
                     <button

@@ -1,4 +1,4 @@
-const PenawaranHarga = ({ bidPrice, setBidPrice, closeBidPopup, submitBid, lelangStatus }) => {
+const PenawaranHarga = ({ bidPrice, setBidPrice, closeBidPopup, submitBid, lelangStatus, isEdit }) => {
   const handleBidChange = (e) => {
     setBidPrice(e.target.value);
   };
@@ -11,7 +11,7 @@ const PenawaranHarga = ({ bidPrice, setBidPrice, closeBidPopup, submitBid, lelan
       >
         &times;
       </button>
-      <h3 className="text-center mb-4 font-semibold text-lg">Tawar Harga</h3>
+      <h3 className="text-center mb-4 font-semibold text-lg">{isEdit ? 'Edit Penawaran' : 'Tawar Harga'}</h3>
       {lelangStatus === "ditutup" ? (
         <p className="text-center text-red-500">Maaf, sesi lelang sudah berakhir.</p>
       ) : (
@@ -34,7 +34,7 @@ const PenawaranHarga = ({ bidPrice, setBidPrice, closeBidPopup, submitBid, lelan
               onClick={submitBid}
               className="bg-blue-main text-white px-4 py-2 rounded-lg"
             >
-              Submit
+              {isEdit ? 'Update' : 'Submit'}
             </button>
           </div>
         </>

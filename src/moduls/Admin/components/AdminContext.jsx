@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran } from "../../../config/api"; // Sesuaikan dengan path untuk getBarang, addBarang, editBarang, deleteBarang, dan getLelang
+import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran, deletePenawaran, editPenawaran } from "../../../config/api"; // Sesuaikan dengan path untuk getBarang, addBarang, editBarang, deleteBarang, dan getLelang
 import { useCookies } from "react-cookie";
 import { useAuth } from "../../../Auth/AuthContext";
 
@@ -19,6 +19,8 @@ const initialLelang = {
   handleUpdateLelangStatus: () => { }, // Tambahkan fungsi untuk memperbarui status lelang
   handleAddPenawaran: () => {},
   handleGetPenawaran: () => {},
+  handleDeletePenawaran: () => {},
+  handleEditPenawaran: () => {},
 };
 
 // Buat context
@@ -41,6 +43,7 @@ const LelangProvider = ({ children }) => {
 
   console.log("Data Lelang:", dataLelang);
 
+
   const handleGetPenawaran = async () => {
     try {
       const response = await getPenawaran(token);
@@ -55,6 +58,12 @@ const LelangProvider = ({ children }) => {
 
   const handleAddPenawaran = async (id, nominal) => {
     try {
+      const existingPenawaran = penawaran.find(p => p.id_lelang === id && p.username === name);
+      if (existingPenawaran) {
+        Swal.fire("Gagal", "Anda sudah memiliki penawaran pada lelang ini. Anda hanya bisa mengedit penawaran Anda.", "error");
+        return;
+      }
+
       const response = await addPenawaran(id, token, nominal);
       if (response.status === 201) {
         handleGetPenawaran(); // Perbarui daftar penawaran setelah berhasil menambah penawaran
@@ -64,6 +73,47 @@ const LelangProvider = ({ children }) => {
       console.error("Failed to add Penawaran:", error);
     }
   };
+
+  const handleDeletePenawaran = async (id_penawaran, username) => {
+    try {
+      const penawaranItem = penawaran.find(p => p.id_penawaran === id_penawaran);
+      if (penawaranItem && penawaranItem.username === username) {
+        const response = await deletePenawaran(id_penawaran, token);
+        if (response.status === 200) {
+          handleGetPenawaran(); // Perbarui daftar penawaran setelah berhasil menghapus penawaran
+          Swal.fire("Berhasil", "Penawaran berhasil dihapus", "success");
+        } else {
+          Swal.fire("Gagal", "Gagal menghapus penawaran", "error");
+        }
+      } else {
+        Swal.fire("Gagal", "Anda tidak memiliki izin untuk menghapus penawaran ini", "error");
+      }
+    } catch (error) {
+      console.error("Failed to delete penawaran:", error);
+      Swal.fire("Gagal", "Gagal menghapus penawaran", "error");
+    }
+  };
+
+  const handleEditPenawaran = async (id_lelang, id_penawaran, nominal, username) => {
+    try {
+      const penawaranItem = penawaran.find(p => p.id_penawaran === id_penawaran);
+      if (penawaranItem && penawaranItem.username === username) {
+        const response = await editPenawaran(id_lelang, id_penawaran, token, nominal);
+        if (response.status === 200) {
+          handleGetPenawaran(); // Perbarui daftar penawaran setelah berhasil mengedit penawaran
+          Swal.fire("Berhasil", "Penawaran berhasil diedit", "success");
+        } else {
+          Swal.fire("Gagal", "Gagal mengedit penawaran", "error");
+        }
+      } else {
+        Swal.fire("Gagal", "Anda tidak memiliki izin untuk mengedit penawaran ini", "error");
+      }
+    } catch (error) {
+      console.error("Failed to edit penawaran:", error);
+      Swal.fire("Gagal", "Gagal mengedit penawaran", "error");
+    }
+  };
+
 
   const handleGetUser = async () => {
     try {
@@ -207,7 +257,7 @@ const LelangProvider = ({ children }) => {
   }, [handleFetch,barang]);
 
   return (
-    <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus }}>
+    <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleEditPenawaran, handleDeletePenawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus }}>
       {children}
     </LelangContext.Provider>
   );
