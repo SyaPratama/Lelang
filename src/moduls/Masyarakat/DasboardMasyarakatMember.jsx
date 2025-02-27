@@ -13,7 +13,7 @@ const MainLayoutsMasyarakatMember = () => {
   const [selectedHistory, setSelectedHistory] = useState([]);
   const [showBidPopup, setShowBidPopup] = useState(false);
   const [bidPrice, setBidPrice] = useState("");
-  const { dataLelang, handleGetLelang, handleAddPenawaran, handleGetPenawaran, handleEditPenawaran, penawaran } = useLelang();
+  const { dataLelang, handleGetLelang, handleAddPenawaran, handleGetPenawaran, handleEditPenawaran, penawaran, handleDeletePenawaran } = useLelang();
   const [selectedLelangStatus, setSelectedLelangStatus] = useState("");
   const [selectedLelangId, setSelectedLelangId] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
@@ -35,6 +35,11 @@ const MainLayoutsMasyarakatMember = () => {
 
   const closeHistoryPopup = () => {
     setShowHistoryPopup(false);
+  };
+
+  const handleDeleteBid = async (id_penawaran) => {
+    await handleDeletePenawaran(id_penawaran, name);
+    handleGetPenawaran(); // Refresh penawaran after deletion
   };
 
   const handleBid = (id, status) => {
@@ -137,6 +142,9 @@ const MainLayoutsMasyarakatMember = () => {
           <HistoryPenawaran
             historyData={selectedHistory}
             closePopup={closeHistoryPopup}
+            isAdmin={false}
+            handleDeleteBid={handleDeleteBid}
+            currentUser={name}
           />
         )}
         {showBidPopup && (

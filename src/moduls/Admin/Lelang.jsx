@@ -4,15 +4,16 @@ import Header from "./components/Header";
 import Card from "./components/Card";
 import HistoryPenawaran from "./components/HistoryPenawaran";
 import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
+import Swal from 'sweetalert2';
 
 const Lelang = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState([]);
-  const { dataLelang, handleGetLelang, handleDeleteLelang, handleUpdateLelangStatus, penawaran, handleGetPenawaran } = useLelang();
+  const { dataLelang, handleGetLelang, handleDeleteLelang, handleUpdateLelangStatus, penawaran, handleGetPenawaran, handleGetHighestBid } = useLelang();
 
   useEffect(() => {
-    handleGetLelang(); // Pastikan data lelang diambil ketika halaman dimuat
-    handleGetPenawaran(); // Pastikan data penawaran diambil ketika halaman dimuat
+    handleGetLelang();
+    handleGetPenawaran();
   }, []);
 
   console.log("Data Lelang di Komponen:", dataLelang);
@@ -41,6 +42,34 @@ const Lelang = () => {
     return bids.reduce((prev, current) => (prev.nominal > current.nominal) ? prev : current);
   };
 
+  const addHighestBidToReport = async (id_penawaran) => {
+    const highestBid = await handleGetHighestBid(id_penawaran);
+    console.log("Highest Bid Response: ", highestBid); // Tambahkan log ini untuk debugging
+    if (highestBid && highestBid.dataPenawaran && highestBid.dataPenawaran.length > 0) {
+      const reportData = JSON.parse(localStorage.getItem('reportData')) || [];
+      reportData.push(highestBid.dataPenawaran[0]);
+      localStorage.setItem('reportData', JSON.stringify(reportData));
+
+      const lelang = dataLelang.find(l => l.id_lelang === highestBid.dataPenawaran[0].id_lelang);
+      if (lelang && lelang.status === "dibuka") {
+        await handleUpdateLelangStatus({ id_lelang: lelang.id_lelang, id_barang: lelang.id_barang, tgl_lelang: lelang.tgl_lelang, status: "ditutup" });
+      }
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Tidak ada penawaran tertinggi',
+        text: 'Penawaran tertinggi tidak ditemukan untuk lelang ini.',
+        timer: 2000,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading()
+        }
+      });
+    }
+    closeHistoryPopup();
+  };
+
   return (
     <>
       <Header title="Lelang" />
@@ -56,7 +85,7 @@ const Lelang = () => {
             onUpdateStatus={(status) => handleUpdateStatus(lelang.id_lelang, lelang.id_barang, lelang.tgl_lelang, status)}
             onBatal={() => handleBatal(lelang.id_lelang)}
             onHistory={() => handleHistory(lelang.id_lelang)}
-            showMainButtons={false} // Tidak menampilkan tombol utama di halaman lelang
+            showMainButtons={false}
             title={lelang.nama_barang}
             description={lelang.deskripsi_barang}
             date={lelang.tgl_lelang}
@@ -72,6 +101,8 @@ const Lelang = () => {
         <HistoryPenawaran
           historyData={selectedHistory}
           closePopup={closeHistoryPopup}
+          addHighestBidToReport={addHighestBidToReport}
+          isAdmin={true}
         />
       )}
     </>

@@ -304,3 +304,19 @@ export const addPenawaran = async (id, token, nominal) => {
     return error.response.data;
   }
 };
+
+export const getHighestBid = async (id_penawaran, token) => {
+  return axios.get(`${https}/penawaran/${id_penawaran}`, {
+    headers: {
+      'Authorization': 'Bearer ' + token,
+    },
+  })
+  .then((response) => {
+    console.log("Highest Bid Response:", response);
+    return response;
+  })
+  .catch((error) => {
+    console.error("API Error:", error);
+    return error.response;
+  });
+};

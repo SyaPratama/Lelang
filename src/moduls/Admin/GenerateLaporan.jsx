@@ -1,20 +1,60 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Header from "./components/Header";
 import TableGenerate from "./components/TableGenerate";
 import StrukModalGenerate from "./components/StrukModalGenerate";
 import Search from "./components/Search";
+import Swal from "sweetalert2";
 
 function GenerateLaporan() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const printRef = useRef();
   const [showButton, setShowButton] = useState(true);
+  const [reportData, setReportData] = useState([]);
+
+  useEffect(() => {
+    const reportData = localStorage.getItem('reportData');
+    if (reportData) {
+      try {
+        const parsedReportData = JSON.parse(reportData);
+        setReportData(parsedReportData);
+      } catch (e) {
+        console.error("Failed to parse reportData:", e);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Data laporan tidak valid.',
+        });
+      }
+    }
+  }, []);
 
   const handleCetakClick = (row) => {
     setSelectedRow(row);
-    setIsModalOpen(true);
+    if (row.nominal && row.nominal > 0) {
+      setIsModalOpen(true);
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Belum ada penawaran',
+        text: 'Belum ada penawaran pada lelang ini.',
+        timer: 2000,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading()
+        }
+      });
+    }
+  };
+
+  const handleDeleteReport = (index) => {
+    const updatedReportData = [...reportData];
+    updatedReportData.splice(index, 1);
+    setReportData(updatedReportData);
+    localStorage.setItem('reportData', JSON.stringify(updatedReportData));
   };
 
   const handleCloseModal = () => {
@@ -22,8 +62,8 @@ function GenerateLaporan() {
   };
 
   const generatePDF = async () => {
-    setShowButton(false); // Hide the button before generating PDF
-    await new Promise((resolve) => setTimeout(resolve, 100)); // Wait for 100ms to hide button
+    setShowButton(false);
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const canvas = await html2canvas(printRef.current);
     const imgData = canvas.toDataURL("image/png");
@@ -35,8 +75,8 @@ function GenerateLaporan() {
     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
     pdf.save("struk_pembayaran.pdf");
 
-    setShowButton(true); // Show the button again after generating PDF
-    setIsModalOpen(false); // Close the modal after generating the PDF
+    setShowButton(true);
+    setIsModalOpen(false);
   };
 
   return (
@@ -49,7 +89,7 @@ function GenerateLaporan() {
           </div>
         </div>
 
-      <TableGenerate handleCetakClick={handleCetakClick} />
+      <TableGenerate handleCetakClick={handleCetakClick} reportData={reportData} handleDeleteReport={handleDeleteReport} />
 
       <StrukModalGenerate
         isModalOpen={isModalOpen}
