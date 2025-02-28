@@ -205,7 +205,7 @@ const LelangProvider = ({ children }) => {
     setIsAddingLelang(true);
     try {
       const response = await addLelang(lelang, token);
-      if (response.status === 200 || response.status === 201) {
+      if (response.status === 201 || response.status === 201) {
         await handleGetLelang();
         Swal.fire("Berhasil", "Barang berhasil ditambahkan ke lelang", "success");
       } else {

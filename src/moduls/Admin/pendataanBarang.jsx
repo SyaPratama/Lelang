@@ -68,7 +68,7 @@ function PendataanBarang() {
     if (result.isConfirmed) {
       const lelangData = {
         id_barang: id_barang,
-        tgl_lelang: new Date().toISOString().split('T')[0], // Set tanggal lelang ke hari ini
+        // tgl_lelang: new Date().toISOString().split('T')[0], // Set tanggal lelang ke hari ini
         status: "dibuka"
       };
       await handleAddLelang(lelangData);

@@ -39,28 +39,29 @@ const Card = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden w-full max-w-sm mx-auto hover:shadow-lg transition-shadow duration-300 group">
-      {/* Container Gambar */}
-      <div className="relative rounded-t-lg overflow-hidden">
-        <div className="p-4 bg-white">
-          <div className="overflow-hidden rounded-md">
-            <img
-              className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-              src={`${https}/file/${imageUrl}`}
-              alt={title}
-            />
-          </div>
-        </div>
-        {!hideStatus && (
-          <span
-            className={`absolute top-2 left-2 px-3 py-1 text-xs font-semibold rounded-full text-white ${
-              status === "dibuka" ? "bg-green-500" : "bg-red-500"
-            }`}
-          >
-            {status === "dibuka" ? "Dibuka" : "Ditutup"}
-          </span>
-        )}
+    <div className="bg-white rounded-lg shadow-md overflow-visible w-full max-w-sm mx-auto hover:shadow-lg transition-shadow duration-300 group">
+  {/* Container Gambar */}
+  <div className="relative rounded-t-lg overflow-hidden">
+    <div className="p-4 bg-white">
+      <div className="overflow-hidden rounded-md">
+        <img
+          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+          src={`${https}/file/${imageUrl}`}
+          alt={title}
+        />
       </div>
+    </div>
+    {!hideStatus && (
+      <span
+        className={`absolute top-2 left-2 px-3 py-1 text-xs font-semibold rounded-full text-white ${
+          status === "dibuka" ? "bg-green-500" : "bg-red-500"
+        }`}
+      >
+        {status === "dibuka" ? "Dibuka" : "Ditutup"}
+      </span>
+    )}
+  </div>
+
 
       {/* Content Section */}
       <div className="p-4 pt-0">

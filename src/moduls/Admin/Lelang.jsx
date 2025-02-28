@@ -18,8 +18,8 @@ const Lelang = () => {
 
   console.log("Data Lelang di Komponen:", dataLelang);
 
-  const handleUpdateStatus = async (id_lelang, id_barang, tgl_lelang, status) => {
-    await handleUpdateLelangStatus({ id_lelang, id_barang, tgl_lelang, status });
+  const handleUpdateStatus = async (id_lelang, id_barang, status) => {
+    await handleUpdateLelangStatus({ id_lelang, id_barang, status });
   };
 
   const handleBatal = async (id_lelang) => {
@@ -71,7 +71,7 @@ const Lelang = () => {
 
       const lelang = dataLelang.find(l => l.id_lelang === highestBid.dataPenawaran[0].id_lelang);
       if (lelang && lelang.status === "dibuka") {
-        await handleUpdateLelangStatus({ id_lelang: lelang.id_lelang, id_barang: lelang.id_barang, tgl_lelang: lelang.tgl_lelang, status: "ditutup" });
+        await handleUpdateLelangStatus({ id_lelang: lelang.id_lelang, id_barang: lelang.id_barang, status: "ditutup" });
       }
     } else {
       Swal.fire({
@@ -101,13 +101,13 @@ const Lelang = () => {
         {Array.isArray(dataLelang) && dataLelang.map((lelang) => (
           <Card
             key={lelang.id_lelang}
-            onUpdateStatus={(status) => handleUpdateStatus(lelang.id_lelang, lelang.id_barang, lelang.tgl_lelang, status)}
+            onUpdateStatus={(status) => handleUpdateStatus(lelang.id_lelang, lelang.id_barang, status)}
             onBatal={() => handleBatal(lelang.id_lelang)}
             onHistory={() => handleHistory(lelang.id_lelang)}
             showMainButtons={false}
             title={lelang.nama_barang}
             description={lelang.deskripsi_barang}
-            date={lelang.tgl_lelang}
+            date={lelang.tanggal}
             price={lelang.harga_awal}
             imageUrl={lelang.foto}
             status={lelang.status}

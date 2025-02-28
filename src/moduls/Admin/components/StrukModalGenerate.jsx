@@ -12,7 +12,7 @@ const StrukModalGenerate = ({ isModalOpen, handleCloseModal, generatePDF, select
           <h2 className="text-center text-2xl font-bold mb-4">Struk Pembayaran</h2>
           <div className="mb-4">
             <p><strong>Username:</strong> {selectedRow.nama_lengkap}</p>
-            <p><strong>Tanggal:</strong> {new Date(selectedRow.tgl_lelang).toLocaleDateString()}</p>
+            <p><strong>Tanggal:</strong> {new Date(selectedRow.tanggal).toLocaleDateString()}</p>
             <p><strong>Status:</strong> {selectedRow.status}</p>
             <p><strong>Nama Barang:</strong> {selectedRow.nama_barang}</p>
             <p><strong>Harga Awal:</strong> {selectedRow.harga_awal}</p>

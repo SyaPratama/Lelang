@@ -175,7 +175,6 @@ export const updateLelangStatus = async (data, token) => {
     console.trace(data);
     const response = await axios.put(https + `/lelang/${data.id_lelang}`,{
     id_barang: data.id_barang,
-    tgl_lelang: data.tgl_lelang,
     status: data.status
     }, {
       headers: {

@@ -19,7 +19,7 @@ const DropdownStatusLelang = ({ onStatusChange, currentStatus }) => {
   };
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative inline-block text-left z-50">
       <div>
         <button
           onClick={toggleDropdown}
@@ -44,7 +44,7 @@ const DropdownStatusLelang = ({ onStatusChange, currentStatus }) => {
 
       {dropdownOpen && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-25 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+          className="origin-top-right absolute right-0 mt-2 w-25 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="options-menu"

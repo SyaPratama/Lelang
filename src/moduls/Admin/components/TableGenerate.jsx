@@ -43,7 +43,7 @@ const TableGenerate = ({ handleCetakClick, reportData, handleDeleteReport }) => 
             row && (
               <tr key={index}>
                 <td className="py-2 px-4 border-b border-gray-200">{row.nama_lengkap}</td>
-                <td className="py-2 px-4 border-b border-gray-200">{new Date(row.tgl_lelang).toLocaleDateString()}</td>
+                <td className="py-2 px-4 border-b border-gray-200">{new Date(row.tanggal).toLocaleDateString()}</td>
                 <td className="py-2 px-4 border-b border-gray-200">{row.status}</td>
                 <td className="py-2 px-4 border-b border-gray-200">{row.nama_barang}</td>
                 <td className="py-2 px-4 border-b border-gray-200">{row.harga_awal}</td>
