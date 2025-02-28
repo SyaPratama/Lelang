@@ -1,28 +1,28 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran, deletePenawaran, editPenawaran, getHighestBid, postHistory } from "../../../config/api";
-import { useCookies } from "react-cookie";
+import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran, deletePenawaran, editPenawaran, getHighestBid, postHistory, deleteHistory } from "../../../config/api";
 import { useAuth } from "../../../Auth/AuthContext";
 
 const initialLelang = {
   barang: [],
   dataLelang: [],
   penawaran: [],
-  handleGetUser: () => { },
-  handleGetBarang: () => { },
-  handleAddBarang: () => { },
-  handleEditBarang: () => { },
-  handleDeleteBarang: () => { },
-  handleGetLelang: () => { },
-  handleAddLelang: () => { },
-  handleDeleteLelang: () => { },
-  handleUpdateLelangStatus: () => { },
+  handleGetUser: () => {},
+  handleGetBarang: () => {},
+  handleAddBarang: () => {},
+  handleEditBarang: () => {},
+  handleDeleteBarang: () => {},
+  handleGetLelang: () => {},
+  handleAddLelang: () => {},
+  handleDeleteLelang: () => {},
+  handleUpdateLelangStatus: () => {},
   handleAddPenawaran: () => {},
   handleGetPenawaran: () => {},
   handleDeletePenawaran: () => {},
   handleEditPenawaran: () => {},
   handleGetHighestBid: () => {},
   handlePostHistory: () => {},
+  handleDeleteHistory: () => {},
 };
 
 const LelangContext = createContext(initialLelang);
@@ -135,7 +135,7 @@ const LelangProvider = ({ children }) => {
 
   const handleGetBarang = async () => {
     try {
-      const response = await getBarang();
+      const response = await getBarang(token);
       const { data } = response.data;
       setBarang(data.barang);
     } catch (error) {
@@ -261,6 +261,22 @@ const LelangProvider = ({ children }) => {
     }
   };
 
+  const handleDeleteHistory = async (id_history) => {
+    try {
+      const response = await deleteHistory(id_history, token);
+      if (response.status === 201) {
+        await handleGetLelang();
+        Swal.fire("Berhasil", "History berhasil dihapus", "success");
+        setHandleFetch(true);
+      } else {
+        Swal.fire("Gagal", "Gagal menghapus history", "error");
+      }
+    } catch (error) {
+      console.error("Failed to delete history:", error);
+      Swal.fire("Gagal", "Gagal menghapus history", "error");
+    }
+  };
+
   useEffect(() => {
     if (handleFetch) {
       handleGetBarang();
@@ -279,7 +295,7 @@ const LelangProvider = ({ children }) => {
   }, []);
 
   return (
-    <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleGetHighestBid, handleEditPenawaran, handleDeletePenawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus, handlePostHistory }}>
+    <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleGetHighestBid, handleEditPenawaran, handleDeletePenawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus, handlePostHistory, handleDeleteHistory }}>
       {children}
     </LelangContext.Provider>
   );

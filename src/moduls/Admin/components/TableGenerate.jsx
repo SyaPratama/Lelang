@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 
 const TableGenerate = ({ handleCetakClick, reportData, handleDeleteReport }) => {
-  const confirmDelete = (index) => {
+  const confirmDelete = (index, id_history) => {
     Swal.fire({
       title: 'Apakah Anda yakin?',
       text: "Anda tidak akan bisa mengembalikan data ini!",
@@ -13,12 +13,7 @@ const TableGenerate = ({ handleCetakClick, reportData, handleDeleteReport }) => 
       cancelButtonText: 'Batal'
     }).then((result) => {
       if (result.isConfirmed) {
-        handleDeleteReport(index);
-        Swal.fire(
-          'Dihapus!',
-          'Data telah dihapus.',
-          'success'
-        );
+        handleDeleteReport(index, id_history);
       }
     });
   };
@@ -58,7 +53,7 @@ const TableGenerate = ({ handleCetakClick, reportData, handleDeleteReport }) => 
                   </button>
                   <button
                     className="bg-red-600 text-white py-1 px-2 rounded ml-2"
-                    onClick={() => confirmDelete(index)}
+                    onClick={() => confirmDelete(index, row.id_history)}
                   >
                     Hapus
                   </button>

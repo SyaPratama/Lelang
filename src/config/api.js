@@ -296,3 +296,17 @@ export const getHistory = async (token) => {
     return { status: "error", data: null };
   }
 };
+
+// Function to delete history
+export const deleteHistory = async (id_history, token) => {
+  try {
+    const response = await axios.delete(https + `/history/${id_history}`, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};

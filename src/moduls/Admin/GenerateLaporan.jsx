@@ -6,7 +6,7 @@ import TableGenerate from "./components/TableGenerate";
 import StrukModalGenerate from "./components/StrukModalGenerate";
 import Search from "./components/Search";
 import Swal from "sweetalert2";
-import { getHistory } from "../../config/api"; // Import getHistory function
+import { getHistory, deleteHistory } from "../../config/api"; // Import getHistory and deleteHistory functions
 import { useAuth } from "../../Auth/AuthContext"; // Import useAuth
 
 function GenerateLaporan() {
@@ -60,10 +60,25 @@ function GenerateLaporan() {
     }
   };
 
-  const handleDeleteReport = (index) => {
-    const updatedReportData = [...reportData];
-    updatedReportData.splice(index, 1);
-    setReportData(updatedReportData);
+  const handleDeleteReport = async (index, id_history) => {
+    try {
+      const response = await deleteHistory(id_history, token); // Call deleteHistory API
+      if (response.status === 200) {
+        const updatedReportData = [...reportData];
+        updatedReportData.splice(index, 1);
+        setReportData(updatedReportData);
+        Swal.fire("Dihapus!", "Data telah dihapus.", "success");
+      } else {
+        throw new Error("Failed to delete history");
+      }
+    } catch (error) {
+      console.error("Failed to delete history:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Gagal menghapus data history.",
+      });
+    }
   };
 
   const handleCloseModal = () => {
