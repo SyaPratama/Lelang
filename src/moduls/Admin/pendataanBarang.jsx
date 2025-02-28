@@ -110,19 +110,21 @@ function PendataanBarang() {
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
           {Array.isArray(barang) && barang.map((item) => (
             <Card
-              key={item.id_barang}
-              onDelete={() => handleDelete(item.id_barang)}
-              onEdit={() => handleEdit(item.id_barang)}
-              onLelang={() => handleLelang(item.id_barang)}
-              showMainButtons={true} // Menampilkan tombol edit, hapus, tambah
-              title={item.nama_barang}
-              description={item.deskripsi_barang}
-              price={item.harga_awal}
-              date={item.tanggal}
-              imageUrl={item.foto} // Tambahkan URL gambar jika tersedia
-              status={item.status} // Tambahkan status barang
-              hideStatus={true} // Jangan tampilkan status di halaman pendataan
-            />
+            key={item.id_barang}
+            onDelete={() => handleDelete(item.id_barang)}
+            onEdit={() => handleEdit(item.id_barang)}
+            onLelang={() => handleLelang(item.id_barang)}
+            showMainButtons={true} // Menampilkan tombol edit, hapus, tambah
+            title={item.nama_barang}
+            description={item.deskripsi_barang}
+            price={item.harga_awal}
+            date={item.tanggal}
+            imageUrl={item.foto} // Tambahkan URL gambar jika tersedia
+            status={item.status} // Tambahkan status barang
+            hideStatus={true} // Jangan tampilkan status di halaman pendataan
+            hideHighBid={true} // Jangan tampilkan teks "Belum ada penawaran"
+          />
+          
           ))}
         </section>
       </section>
