@@ -42,13 +42,13 @@ const TableGenerate = ({ handleCetakClick, reportData, handleDeleteReport }) => 
           {reportData.map((row, index) => (
             row && (
               <tr key={index}>
-                <td className="py-2 px-4 border-b border-gray-200">{row.username}</td>
+                <td className="py-2 px-4 border-b border-gray-200">{row.nama_lengkap}</td>
                 <td className="py-2 px-4 border-b border-gray-200">{new Date(row.tgl_lelang).toLocaleDateString()}</td>
                 <td className="py-2 px-4 border-b border-gray-200">{row.status}</td>
                 <td className="py-2 px-4 border-b border-gray-200">{row.nama_barang}</td>
                 <td className="py-2 px-4 border-b border-gray-200">{row.harga_awal}</td>
-                <td className="py-2 px-4 border-b border-gray-200">{row.nominal}</td>
-                <td className="py-2 px-4 border-b border-gray-200">{row.telp}</td>
+                <td className="py-2 px-4 border-b border-gray-200">{row.nominal || "N/A"}</td>
+                <td className="py-2 px-4 border-b border-gray-200">{row.telp || "N/A"}</td>
                 <td className="py-2 px-4 border-b border-gray-200">
                   <button
                     className="bg-blue-main text-white py-1 px-2 rounded"

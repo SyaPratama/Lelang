@@ -1,15 +1,32 @@
 import Swal from 'sweetalert2';
+import { useLelang } from "../components/AdminContext"; // Sesuaikan dengan path yang benar
 
 const HistoryPenawaran = ({ historyData = [], closePopup, addHighestBidToReport, isAdmin, handleDeleteBid, currentUser }) => {
-  const handleSelectHighestBid = () => {
+  const { handlePostHistory } = useLelang();
+
+  const handleSelectHighestBid = async () => {
     if (historyData.length > 0) {
       const highestBid = historyData.reduce((prev, current) => (prev.nominal > current.nominal) ? prev : current);
-      addHighestBidToReport(highestBid.id_penawaran);
-      Swal.fire(
-        'Berhasil!',
-        'Penawaran tertinggi telah dipilih.',
-        'success'
-      );
+      
+      try {
+        // Post the highest bid to /history
+        await handlePostHistory(highestBid.id_penawaran);
+        
+        // Add highest bid to report
+        addHighestBidToReport(highestBid.id_penawaran);
+        Swal.fire(
+          'Berhasil!',
+          'Penawaran tertinggi telah dipilih.',
+          'success'
+        );
+      } catch (error) {
+        console.error("Error saat memilih penawaran tertinggi:", error);
+        Swal.fire(
+          'Gagal!',
+          'Terjadi kesalahan saat memilih penawaran tertinggi.',
+          'error'
+        );
+      }
     }
   };
 

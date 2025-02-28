@@ -6,6 +6,8 @@ import TableGenerate from "./components/TableGenerate";
 import StrukModalGenerate from "./components/StrukModalGenerate";
 import Search from "./components/Search";
 import Swal from "sweetalert2";
+import { getHistory } from "../../config/api"; // Import getHistory function
+import { useAuth } from "../../Auth/AuthContext"; // Import useAuth
 
 function GenerateLaporan() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,23 +15,31 @@ function GenerateLaporan() {
   const printRef = useRef();
   const [showButton, setShowButton] = useState(true);
   const [reportData, setReportData] = useState([]);
+  const { token } = useAuth(); // Get the token from useAuth
 
   useEffect(() => {
-    const reportData = localStorage.getItem('reportData');
-    if (reportData) {
+    const fetchHistory = async () => {
       try {
-        const parsedReportData = JSON.parse(reportData);
-        setReportData(parsedReportData);
-      } catch (e) {
-        console.error("Failed to parse reportData:", e);
+        const response = await getHistory(token); // Pass the token to getHistory
+        console.log("History response:", response); // Debugging line
+        if (response.status === 201 && response.data.status === "success") {
+          const { data } = response.data;
+          setReportData(data.history);
+        } else {
+          throw new Error("Failed to fetch history data");
+        }
+      } catch (error) {
+        console.error("Failed to fetch history:", error);
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Data laporan tidak valid.',
+          icon: "error",
+          title: "Error",
+          text: "Gagal mendapatkan data history.",
         });
       }
-    }
-  }, []);
+    };
+
+    fetchHistory();
+  }, [token]); // Add token as a dependency
 
   const handleCetakClick = (row) => {
     setSelectedRow(row);
@@ -37,15 +47,15 @@ function GenerateLaporan() {
       setIsModalOpen(true);
     } else {
       Swal.fire({
-        icon: 'info',
-        title: 'Belum ada penawaran',
-        text: 'Belum ada penawaran pada lelang ini.',
+        icon: "info",
+        title: "Belum ada penawaran",
+        text: "Belum ada penawaran pada lelang ini.",
         timer: 2000,
         showConfirmButton: false,
         timerProgressBar: true,
         didOpen: () => {
-          Swal.showLoading()
-        }
+          Swal.showLoading();
+        },
       });
     }
   };
@@ -54,7 +64,6 @@ function GenerateLaporan() {
     const updatedReportData = [...reportData];
     updatedReportData.splice(index, 1);
     setReportData(updatedReportData);
-    localStorage.setItem('reportData', JSON.stringify(updatedReportData));
   };
 
   const handleCloseModal = () => {
@@ -81,15 +90,19 @@ function GenerateLaporan() {
 
   return (
     <>
-      <Header title="Generate Laporan"/>
-      
-      <div className="grid grid-cols-12 gap-2 w-full pt-2">
-          <div className="order-3 col-span-8 lg:col-span-4 lg:order-3">
-            <Search />
-          </div>
-        </div>
+      <Header title="Generate Laporan" />
 
-      <TableGenerate handleCetakClick={handleCetakClick} reportData={reportData} handleDeleteReport={handleDeleteReport} />
+      <div className="grid grid-cols-12 gap-2 w-full pt-2">
+        <div className="order-3 col-span-8 lg:col-span-4 lg:order-3">
+          <Search />
+        </div>
+      </div>
+
+      <TableGenerate
+        handleCetakClick={handleCetakClick}
+        reportData={reportData}
+        handleDeleteReport={handleDeleteReport}
+      />
 
       <StrukModalGenerate
         isModalOpen={isModalOpen}

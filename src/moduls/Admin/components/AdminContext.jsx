@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran, deletePenawaran, editPenawaran, getHighestBid } from "../../../config/api";
+import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran, deletePenawaran, editPenawaran, getHighestBid, postHistory } from "../../../config/api";
 import { useCookies } from "react-cookie";
 import { useAuth } from "../../../Auth/AuthContext";
 
@@ -22,6 +22,7 @@ const initialLelang = {
   handleDeletePenawaran: () => {},
   handleEditPenawaran: () => {},
   handleGetHighestBid: () => {},
+  handlePostHistory: () => {},
 };
 
 const LelangContext = createContext(initialLelang);
@@ -250,6 +251,16 @@ const LelangProvider = ({ children }) => {
     }
   };
 
+  const handlePostHistory = async (id_penawaran) => {
+    try {
+      const response = await postHistory({ id_penawaran }, token);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to post history:", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     if (handleFetch) {
       handleGetBarang();
@@ -268,7 +279,7 @@ const LelangProvider = ({ children }) => {
   }, []);
 
   return (
-    <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleGetHighestBid, handleEditPenawaran, handleDeletePenawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus }}>
+    <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleGetHighestBid, handleEditPenawaran, handleDeletePenawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus, handlePostHistory }}>
       {children}
     </LelangContext.Provider>
   );

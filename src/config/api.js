@@ -266,3 +266,34 @@ export const getHighestBid = async (id_penawaran, token) => {
     return error.response;
   });
 };
+
+// Function to post history
+export const postHistory = async (data, token) => {
+  try {
+    const response = await axios.post(`${https}/history`, data, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+// Function to get history
+export const getHistory = async (token) => {
+  try {
+    const response = await axios.get(`${https}/history`, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+    });
+    console.log("getHistory response:", response); // Debugging line
+    return response;
+  } catch (error) {
+    console.error("Failed to fetch history:", error);
+    return { status: "error", data: null };
+  }
+};
