@@ -21,11 +21,8 @@ const MainLayoutsMasyarakatMember = () => {
 
   useEffect(() => {
     handleGetLelang();
-  }, [dataLelang]);
-
-  useEffect(() => {
     handleGetPenawaran();
-  }, []);
+  }, [dataLelang]);
 
   const handleHistory = (idLelang) => {
     const historyData = penawaran.filter(p => p.id_lelang === idLelang);
@@ -115,29 +112,33 @@ const MainLayoutsMasyarakatMember = () => {
           </div>
           <button className="bg-blue-dark text-blue-main p-2 rounded-lg shadow-md">Hubungi</button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2">
-          {Array.isArray(dataLelang) && dataLelang.map((lelang) => {
-            const userBid = getUserBid(lelang.id_lelang);
-            return (
-              <Card
-                key={lelang.id_lelang}
-                isMasyarakatPage={true}
-                onHistory={() => handleHistory(lelang.id_lelang)}
-                onTawar={() => handleBid(lelang.id_lelang, lelang.status)}
-                onEditBid={() => handleEditBid(lelang.id_lelang, lelang.status, userBid.id_penawaran, userBid.nominal)}
-                isLoggedin={isLoggedin}
-                title={lelang.nama_barang}
-                description={lelang.deskripsi_barang}
-                date={lelang.tgl_lelang}
-                price={lelang.harga_awal}
-                imageUrl={lelang.foto}
-                status={lelang.status}
-                highestBid={getHighestBid(lelang.id_lelang)}
-                hasBid={hasUserBid(lelang.id_lelang)}
-              />
-            );
-          })}
-        </div>
+        {Array.isArray(dataLelang) && dataLelang.length === 0 ? (
+          <p className="text-center">Tidak ada data lelang tersedia.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2">
+            {dataLelang.map((lelang) => {
+              const userBid = getUserBid(lelang.id_lelang);
+              return (
+                <Card
+                  key={lelang.id_lelang}
+                  isMasyarakatPage={true}
+                  onHistory={() => handleHistory(lelang.id_lelang)}
+                  onTawar={() => handleBid(lelang.id_lelang, lelang.status)}
+                  onEditBid={() => handleEditBid(lelang.id_lelang, lelang.status, userBid?.id_penawaran, userBid?.nominal)}
+                  isLoggedin={isLoggedin}
+                  title={lelang.nama_barang}
+                  description={lelang.deskripsi_barang}
+                  date={lelang.tgl_lelang}
+                  price={lelang.harga_awal}
+                  imageUrl={lelang.foto}
+                  status={lelang.status}
+                  highestBid={getHighestBid(lelang.id_lelang)}
+                  hasBid={hasUserBid(lelang.id_lelang)}
+                />
+              );
+            })}
+          </div>
+        )}
         {showHistoryPopup && (
           <HistoryPenawaran
             historyData={selectedHistory}

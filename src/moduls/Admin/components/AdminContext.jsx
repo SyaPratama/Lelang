@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran, deletePenawaran, editPenawaran, getHighestBid } from "../../../config/api"; // Sesuaikan dengan path untuk getBarang, addBarang, editBarang, deleteBarang, dan getLelang
+import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran, deletePenawaran, editPenawaran, getHighestBid } from "../../../config/api";
 import { useCookies } from "react-cookie";
 import { useAuth } from "../../../Auth/AuthContext";
 
@@ -54,7 +54,7 @@ const LelangProvider = ({ children }) => {
 
   const handleGetPenawaran = async () => {
     try {
-      const response = await getPenawaran(token);
+      const response = await getPenawaran();
       const { data } = response.data;
       setPenawaran(data.dataPenawaran);
     } catch (error) {
@@ -134,7 +134,7 @@ const LelangProvider = ({ children }) => {
 
   const handleGetBarang = async () => {
     try {
-      const response = await getBarang(token);
+      const response = await getBarang();
       const { data } = response.data;
       setBarang(data.barang);
     } catch (error) {
@@ -187,7 +187,9 @@ const LelangProvider = ({ children }) => {
 
       const combinedData = lelangData.map(lelang => {
         const barang = barangData.find(b => b.id_barang === lelang.id_barang);
-        return { ...lelang, ...barang };
+        const penawaranForLelang = penawaran.filter(p => p.id_lelang === lelang.id_lelang);
+        const highestBid = penawaranForLelang.reduce((prev, current) => (prev.nominal > current.nominal ? prev : current), { nominal: 0 });
+        return { ...lelang, ...barang, highestBid };
       });
 
       setDataLelang(combinedData);
@@ -259,6 +261,11 @@ const LelangProvider = ({ children }) => {
       }, 300);
     }
   }, [handleFetch, barang]);
+
+  useEffect(() => {
+    handleGetLelang();
+    handleGetPenawaran();
+  }, []);
 
   return (
     <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleGetHighestBid, handleEditPenawaran, handleDeletePenawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus }}>

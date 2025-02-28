@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import EyeIcon from "./components/EyeIconPw";
 
 const LoginAdmin = () => {
   const { doLoginAdmin, changeAuthority } = useAuth();
@@ -8,6 +9,7 @@ const LoginAdmin = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -23,6 +25,10 @@ const LoginAdmin = () => {
       changeAuthority("Admin");
       navigate("/dasboard-admin"); // Arahkan ke dashboard admin setelah login berhasil
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
   };
 
   return (
@@ -41,15 +47,16 @@ const LoginAdmin = () => {
               placeholder="Masukkan Username"
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-6 relative">
             <label className="block text-gray-700">Password</label>
             <input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              type="password"
+              type={isPasswordVisible ? "text" : "password"}
               className="w-full px-3 py-2 border rounded-lg"
               placeholder="Masukkan password"
             />
+            <EyeIcon isVisible={isPasswordVisible} onClick={togglePasswordVisibility} />
           </div>
           <button
             onClick={handleClick}

@@ -11,19 +11,16 @@ const DasboardMasyarakat = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState([]);
   const { isLoggedin } = useAuth(); // Mengambil status login
-  const { dataLelang, handleGetPublicData } = useLelang();
+  const { dataLelang, handleGetLelang, handleGetPenawaran, penawaran } = useLelang();
   const navigate = useNavigate();
 
   useEffect(() => {
-    handleGetPublicData();
+    handleGetLelang();
+    handleGetPenawaran();
   }, []);
 
-  const handleHistory = () => {
-    const historyData = [
-      { name: 'Denis', nawar: '6.000.000.000' },
-      { name: 'Adit', nawar: '7.000.000.000' },
-      { name: 'CRABS', nawar: '50.000.000.000' }
-    ];
+  const handleHistory = (idLelang) => {
+    const historyData = penawaran.filter(p => p.id_lelang === idLelang);
     setSelectedHistory(historyData);
     setShowHistoryPopup(true);
   };
@@ -54,6 +51,12 @@ const DasboardMasyarakat = () => {
     }
   };
 
+  const getHighestBid = (idLelang) => {
+    const lelang = dataLelang.find((l) => l.id_lelang === idLelang);
+    if (!lelang || !lelang.highestBid || lelang.highestBid.nominal === 0) return null;
+    return lelang.highestBid;
+  };
+
   return (
     <>
       <section className="p-2 max-w-[900px] mx-auto">
@@ -65,28 +68,31 @@ const DasboardMasyarakat = () => {
             </Link>
           )}
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2">
-          {Array.isArray(dataLelang) && dataLelang.map((lelang) => (
-            <Card
-              key={lelang.id_lelang}
-              isMasyarakatPage={true}
-              onHistory={handleHistory}
-              handleLoginDulu={handleLoginDulu} // Gunakan handleLoginDulu di sini
-              isLoggedin={isLoggedin} // Tambahkan status login
-              onTawar={() => console.log("Menawar barang")} // Tambahkan handler tawar
-              title={lelang.nama_barang}
-              description={lelang.deskripsi_barang}
-              date={lelang.tgl_lelang}
-              price={lelang.harga_awal}
-              imageUrl={lelang.gambar} // URL gambar jika tersedia
-            />
-          ))}
-        </div>
+        {Array.isArray(dataLelang) && dataLelang.length === 0 ? (
+          <p className="text-center">Tidak ada data lelang tersedia.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2">
+            {dataLelang.map((lelang) => (
+              <Card
+                key={lelang.id_lelang}
+                isMasyarakatPage={true}
+                onHistory={() => handleHistory(lelang.id_lelang)}
+                handleLoginDulu={handleLoginDulu} // Gunakan handleLoginDulu di sini
+                isLoggedin={isLoggedin} // Tambahkan status login
+                onTawar={() => handleLoginDulu()} // Pastikan pengguna diarahkan ke login saat menawar
+                title={lelang.nama_barang}
+                description={lelang.deskripsi_barang}
+                date={lelang.tgl_lelang}
+                price={lelang.harga_awal}
+                imageUrl={lelang.foto} // URL gambar jika tersedia
+                highestBid={getHighestBid(lelang.id_lelang)}
+                status={lelang.status}
+              />
+            ))}
+          </div>
+        )}
         {showHistoryPopup && (
-          <HistoryPenawaran
-            historyData={selectedHistory}
-            closePopup={closeHistoryPopup}
-          />
+          <HistoryPenawaran historyData={selectedHistory} closePopup={closeHistoryPopup} />
         )}
       </section>
     </>

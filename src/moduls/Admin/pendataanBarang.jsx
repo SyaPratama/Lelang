@@ -10,14 +10,34 @@ import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan denga
 function PendataanBarang() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null); // Tambahkan state untuk item yang dipilih
-  const { barang, dataLelang, handleGetBarang, handleEditBarang, handleDeleteBarang, handleAddLelang } = useLelang();
+  const { barang, dataLelang, handleGetBarang, handleGetLelang, handleEditBarang, handleDeleteBarang, handleAddLelang } = useLelang();
 
   useEffect(() => {
     handleGetBarang();
+    handleGetLelang();
   }, []);
 
   const handleDelete = async (id_barang) => {
-    await handleDeleteBarang(id_barang);
+    const result = await Swal.fire({
+      title: 'Apakah kamu yakin?',
+      text: "Anda tidak akan dapat mengembalikan ini!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    });
+
+    if (result.isConfirmed) {
+      await handleDeleteBarang(id_barang);
+      Swal.fire(
+        'Terhapus!',
+        'Data telah dihapus.',
+        'success'
+      );
+      handleGetBarang(); // Refresh barang data after deleting
+    }
   };
 
   const handleEdit = (id_barang) => {
@@ -33,13 +53,32 @@ function PendataanBarang() {
       Swal.fire("Sudah Ada", "Barang ini sudah berada di lelang", "info");
       return;
     }
-    
-    const lelangData = {
-      id_barang: id_barang,
-      tgl_lelang: new Date().toISOString().split('T')[0], // Set tanggal lelang ke hari ini
-      status: "dibuka"
-    };
-    await handleAddLelang(lelangData);
+
+    const result = await Swal.fire({
+      title: 'Apakah kamu yakin?',
+      text: "Barang ini akan dilelang!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, lelang!',
+      cancelButtonText: 'Batal'
+    });
+
+    if (result.isConfirmed) {
+      const lelangData = {
+        id_barang: id_barang,
+        tgl_lelang: new Date().toISOString().split('T')[0], // Set tanggal lelang ke hari ini
+        status: "dibuka"
+      };
+      await handleAddLelang(lelangData);
+      Swal.fire(
+        'Dilelang!',
+        'Barang telah dilelang.',
+        'success'
+      );
+      handleGetLelang(); // Refresh lelang data after adding
+    }
   };
 
   const handleModalOpen = () => {

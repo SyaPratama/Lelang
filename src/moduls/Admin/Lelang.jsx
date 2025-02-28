@@ -23,7 +23,26 @@ const Lelang = () => {
   };
 
   const handleBatal = async (id_lelang) => {
-    await handleDeleteLelang(id_lelang);
+    const result = await Swal.fire({
+      title: 'Apakah kamu yakin?',
+      text: "Anda tidak akan dapat mengembalikan ini!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    });
+
+    if (result.isConfirmed) {
+      await handleDeleteLelang(id_lelang);
+      Swal.fire(
+        'Terhapus!',
+        'Lelang telah dibatalkan.',
+        'success'
+      );
+      handleGetLelang(); // Refresh lelang data after deleting
+    }
   };
 
   const handleHistory = (idLelang) => {

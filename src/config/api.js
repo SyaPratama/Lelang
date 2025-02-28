@@ -42,7 +42,7 @@ export const handleRegister = async (userData) => {
       if (error.response && error.response.status === 409) {
         return {
           status: 409,
-          message: "Username or email already exists.",
+          message: "Username atau email sudah ada.",
         };
       }
       return error.response;
@@ -189,48 +189,9 @@ export const updateLelangStatus = async (data, token) => {
   }
 };
 
-
-
-// Function to delete Penawaran
-// export const deletePenawaran = async (id_penawaran, token) => {
-//   try {
-//     const response = await axios.delete(https + `/penawaran/${id_penawaran}`, {
-//       headers: {
-//         'Authorization': 'Bearer ' + token,
-//       }
-//     });
-//     return response;
-//   } catch (error) {
-//     return error.response.data;
-//   }
-// };
-
-
-// export const addPenawaran = async (id, token, nominal) => {
-//   try {
-//     const response = await axios.post(
-//       `${https}/${id}/penawaran`,
-//       { nominal },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }
-//     );
-//     return response;
-//   } catch (error) {
-//     return error.response.data;
-//   }
-// };
-
-
-
-export const getPenawaran = async (token) => {
-  return axios.get(https + '/penawaran', {
-    headers: {
-      'Authorization': 'Bearer ' + token,
-    }
-  })
+// Function to get Penawaran data
+export const getPenawaran = async () => {
+  return axios.get(https + '/penawaran')
   .then((response) => {
     console.log("API Response:", response);
     return response;
@@ -241,22 +202,25 @@ export const getPenawaran = async (token) => {
   });
 };
 
+// Function to add Penawaran
+export const addPenawaran = async (id, token, nominal) => {
+  try {
+    const response = await axios.post(
+      `${https}/${id}/penawaran`,
+      { nominal },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
 
-// export const editPenawaran = async (id_lelang, id_penawaran, token, nominal) => {
-//   try {
-//     const response = await axios.put(https + `/${id_lelang}/penawaran/${id_penawaran}`, 
-//     { nominal },
-//     {
-//       headers: {
-//         'Authorization': 'Bearer ' + token,
-//       }
-//     });
-//     return response;
-//   } catch (error) {
-//     return error.response.data;
-//   }
-// };
-
+// Function to edit Penawaran
 export const editPenawaran = async (id_lelang, id_penawaran, token, nominal) => {
   try {
     const response = await axios.put(https + `/${id_lelang}/penawaran/${id_penawaran}`, 
@@ -286,25 +250,7 @@ export const deletePenawaran = async (id_penawaran, token) => {
   }
 };
 
-// ...
-
-export const addPenawaran = async (id, token, nominal) => {
-  try {
-    const response = await axios.post(
-      `${https}/${id}/penawaran`,
-      { nominal },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response;
-  } catch (error) {
-    return error.response.data;
-  }
-};
-
+// Function to get Highest Bid for Penawaran
 export const getHighestBid = async (id_penawaran, token) => {
   return axios.get(`${https}/penawaran/${id_penawaran}`, {
     headers: {

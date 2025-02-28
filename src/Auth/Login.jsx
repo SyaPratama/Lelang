@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import EyeIcon from "./components/EyeIconPw";
 
 const Login = () => {
   const { doLogin, changeAuthority } = useAuth();
@@ -8,6 +9,7 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -23,6 +25,10 @@ const Login = () => {
       changeAuthority("User");
       navigate("/dasboard-masyarakat-member"); // Arahkan ke dashboard masyarakat member setelah login berhasil
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
   };
 
   return (
@@ -42,15 +48,16 @@ const Login = () => {
                 placeholder="Masukkan Username" 
               />
             </div>
-            <div className="mb-6">
+            <div className="mb-6 relative">
               <label className="block text-gray-700">Password</label>
               <input
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                type="password" 
+                type={isPasswordVisible ? "text" : "password"}
                 className="w-full px-3 py-2 border rounded-lg" 
-                placeholder="********" 
+                placeholder="Masukkan Password"
               />
+              <EyeIcon isVisible={isPasswordVisible} onClick={togglePasswordVisibility} />
             </div>
 
             <button onClick={handleClick} type="submit" className="w-full bg-blue-main text-white py-2.5 rounded-lg font-medium">

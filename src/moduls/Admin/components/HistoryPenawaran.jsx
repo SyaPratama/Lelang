@@ -1,7 +1,6 @@
-import React from 'react';
 import Swal from 'sweetalert2';
 
-const HistoryPenawaran = ({ historyData, closePopup, addHighestBidToReport, isAdmin, handleDeleteBid, currentUser }) => {
+const HistoryPenawaran = ({ historyData = [], closePopup, addHighestBidToReport, isAdmin, handleDeleteBid, currentUser }) => {
   const handleSelectHighestBid = () => {
     if (historyData.length > 0) {
       const highestBid = historyData.reduce((prev, current) => (prev.nominal > current.nominal) ? prev : current);

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { handleRegister } from "../config/api";
+import Swal from "sweetalert2";
 
 const Registrasi = () => {
   const [namaLengkap, setNamaLengkap] = useState("");
@@ -21,19 +22,36 @@ const Registrasi = () => {
   
     try {
       const response = await handleRegister(userData);
-  
-      if (response.status !== 200) {
+
+      console.log('Response:', response); // Debugging
+
+      if (response.status !== 201) {
         if (response.status === 409) {
-          alert('Registration failed: ' + response.message);
+          Swal.fire({
+            icon: 'error',
+            title: 'Registration failed',
+            text: response.message,
+          });
         } else {
           throw new Error('Registration failed');
         }
       } else {
-        alert('Registration successful!');
-        navigate('/login'); // Arahkan ke halaman login setelah berhasil mendaftar
+        Swal.fire({
+          icon: 'success',
+          title: 'Registration successful!',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          navigate('/login'); // Arahkan ke halaman login setelah berhasil mendaftar
+        });
       }
     } catch (error) {
-      alert('Registration failed: ' + error.message);
+      console.error('Registration error:', error); // Debugging
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration failed',
+        text: error.message,
+      });
     }
   };
 
@@ -52,6 +70,7 @@ const Registrasi = () => {
                 onChange={(e) => setNamaLengkap(e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg" 
                 placeholder="Masukkan Nama Lengkap" 
+                required
               />
             </div>
             <div className="mb-4">
@@ -61,7 +80,8 @@ const Registrasi = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg" 
-                placeholder="Masukkan Username" 
+                placeholder="Masukkan Username"
+                required
               />
             </div>
             <div className="mb-4">
@@ -71,7 +91,8 @@ const Registrasi = () => {
                 value={telp}
                 onChange={(e) => setTelp(e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg" 
-                placeholder="Masukkan Nomor Hp" 
+                placeholder="Masukkan Nomor Hp"
+                required
               />
             </div>
             <div className="mb-6">
@@ -81,7 +102,8 @@ const Registrasi = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg" 
-                placeholder="********" 
+                placeholder="Masukkan Password"
+                required
               />
             </div>
             <button type="submit" className="w-full bg-blue-main text-white py-2.5 rounded-lg font-medium">
