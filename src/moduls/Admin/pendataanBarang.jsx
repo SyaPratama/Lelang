@@ -2,15 +2,25 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import Card from "./components/Card";
-import Search from "./components/Search";
+import SearchBar from "./components/Search";
 import Header from "./components/Header";
 import FormPendataan from "./components/FormPendataan";
+import DateRangeFilter from './components/DateRangeFilter'; // Import DateRangeFilter component
+import PriceRangeFilter from './components/PriceRangeFilter'; // Import PriceRangeFilter component
 import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
 
 function PendataanBarang() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null); // Tambahkan state untuk item yang dipilih
   const { barang, dataLelang, handleGetBarang, handleGetLelang, handleEditBarang, handleDeleteBarang, handleAddLelang } = useLelang();
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [filterColumn, setFilterColumn] = useState("semuanya"); // State for selected filter column
+  const [sortOption, setSortOption] = useState(""); // State for sort option
+  const [startDate, setStartDate] = useState(""); // State for start date
+  const [endDate, setEndDate] = useState(""); // State for end date
+  const [priceRange, setPriceRange] = useState({ min: "", max: "" }); // State for price range
+  const [showDateRangePopup, setShowDateRangePopup] = useState(false); // State for showing date range popup
+  const [showPriceRangePopup, setShowPriceRangePopup] = useState(false); // State for showing price range popup
 
   useEffect(() => {
     handleGetBarang();
@@ -90,41 +100,123 @@ function PendataanBarang() {
     setIsModalOpen(false);
   };
 
+  // Filter barang data based on search query, filter column, date range, and price range
+  const filteredBarang = barang.filter(item => {
+    const matchesSearchQuery = filterColumn === "semuanya"
+      ? Object.values(item).some(value => value.toString().toLowerCase().includes(searchQuery.toLowerCase()))
+      : item[filterColumn]?.toString().toLowerCase().includes(searchQuery.toLowerCase());
+
+    const itemDate = new Date(item.tanggal);
+    const matchesDateRange = (!startDate || itemDate >= new Date(startDate)) && (!endDate || itemDate <= new Date(endDate));
+
+    const matchesPriceRange = (!priceRange.min || item.harga_awal >= Number(priceRange.min)) &&
+      (!priceRange.max || item.harga_awal <= Number(priceRange.max));
+
+    return matchesSearchQuery && matchesDateRange && matchesPriceRange;
+  });
+
+  // Sort barang data based on sort option
+  const sortedBarang = filteredBarang.sort((a, b) => {
+    switch (sortOption) {
+      case "harga_awal_tertinggi":
+        return b.harga_awal - a.harga_awal;
+      case "harga_awal_terendah":
+        return a.harga_awal - b.harga_awal;
+      default:
+        return 0;
+    }
+  });
+
   return (
     <>
       <section className="pb-[50px]">
         <Header title="Pendataan Barang" />
         <div className="grid grid-cols-12 gap-2 w-full pt-2">
           <div className="order-3 col-span-8 lg:col-span-4 lg:order-3">
-            <Search />
+            <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
           </div>
-          <div className="order-4 col-span-2 lg:col-span-2 lg:order-4 flex justify-start items-start">
+          <div className="order-4 col-span-4 lg:col-span-2 lg:order-4">
+            <select
+              onChange={(e) => setFilterColumn(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              value={filterColumn}
+            >
+              <option value="semuanya">Cari Semuanya</option>
+              <option value="nama_barang">Cari Barang</option>
+              <option value="tanggal">Cari Tanggal</option>
+            </select>
+          </div>
+          <div className="order-5 col-span-4 lg:col-span-2 lg:order-5">
+            <select
+              onChange={(e) => setSortOption(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              value={sortOption}
+            >
+              <option value="">Urutkan Harga</option>
+              <option value="harga_awal_tertinggi">Harga Tertinggi</option>
+              <option value="harga_awal_terendah">Harga Terendah</option>
+            </select>
+          </div>
+          <div className="order-6 col-span-2 lg:col-span-2 lg:order-6 flex justify-start items-start">
             <button onClick={handleModalOpen} className="bg-blue-main text-amber-50 py-2 px-2 rounded-lg">
               Tambah
             </button>
           </div>
+          <div className="order-7 col-span-2 lg:col-span-2 lg:order-7 flex justify-start items-start">
+            <button
+              className="bg-blue-main text-white p-2 rounded-lg"
+              onClick={() => setShowDateRangePopup(true)}
+            >
+              Filter Tanggal
+            </button>
+          </div>
+          <div className="order-8 col-span-2 lg:col-span-2 lg:order-8 flex justify-start items-start">
+            <button
+              className="bg-blue-main text-white p-2 rounded-lg"
+              onClick={() => setShowPriceRangePopup(true)}
+            >
+              Filter Harga
+            </button>
+          </div>
         </div>
+
+        {showDateRangePopup && (
+          <DateRangeFilter
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            closePopup={() => setShowDateRangePopup(false)}
+          />
+        )}
+
+        {showPriceRangePopup && (
+          <PriceRangeFilter
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            closePopup={() => setShowPriceRangePopup(false)}
+          />
+        )}
 
         <div className="pt-1 d-flex justify-start"></div>
         <h1>List Item</h1>
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-          {Array.isArray(barang) && barang.map((item) => (
+          {Array.isArray(sortedBarang) && sortedBarang.map((item) => (
             <Card
-            key={item.id_barang}
-            onDelete={() => handleDelete(item.id_barang)}
-            onEdit={() => handleEdit(item.id_barang)}
-            onLelang={() => handleLelang(item.id_barang)}
-            showMainButtons={true} // Menampilkan tombol edit, hapus, tambah
-            title={item.nama_barang}
-            description={item.deskripsi_barang}
-            price={item.harga_awal}
-            date={item.tanggal}
-            imageUrl={item.foto} // Tambahkan URL gambar jika tersedia
-            status={item.status} // Tambahkan status barang
-            hideStatus={true} // Jangan tampilkan status di halaman pendataan
-            hideHighBid={true} // Jangan tampilkan teks "Belum ada penawaran"
-          />
-          
+              key={item.id_barang}
+              onDelete={() => handleDelete(item.id_barang)}
+              onEdit={() => handleEdit(item.id_barang)}
+              onLelang={() => handleLelang(item.id_barang)}
+              showMainButtons={true} // Menampilkan tombol edit, hapus, tambah
+              title={item.nama_barang}
+              description={item.deskripsi_barang}
+              price={item.harga_awal}
+              date={item.tanggal}
+              imageUrl={item.foto} // Tambahkan URL gambar jika tersedia
+              status={item.status} // Tambahkan status barang
+              hideStatus={true} // Jangan tampilkan status di halaman pendataan
+              hideHighBid={true} // Jangan tampilkan teks "Belum ada penawaran"
+            />
           ))}
         </section>
       </section>

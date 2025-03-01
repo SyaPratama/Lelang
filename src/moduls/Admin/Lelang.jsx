@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import Search from "./components/Search";
+import SearchBar from "./components/Search";
 import Header from "./components/Header";
 import Card from "./components/Card";
 import HistoryPenawaran from "./components/HistoryPenawaran";
+import DateRangeFilter from './components/DateRangeFilter'; // Import DateRangeFilter component
+import PriceRangeFilter from './components/PriceRangeFilter'; // Import PriceRangeFilter component
 import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
 import Swal from 'sweetalert2';
 
@@ -10,6 +12,16 @@ const Lelang = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState([]);
   const { dataLelang, handleGetLelang, handleDeleteLelang, handleUpdateLelangStatus, penawaran, handleGetPenawaran, handleGetHighestBid } = useLelang();
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [filterColumn, setFilterColumn] = useState("semuanya"); // State for selected filter column
+  const [statusFilter, setStatusFilter] = useState("semua"); // State for status filter
+  const [sortOption, setSortOption] = useState(""); // State for sort option
+  const [startDate, setStartDate] = useState(""); // State for start date
+  const [endDate, setEndDate] = useState(""); // State for end date
+  const [priceRange, setPriceRange] = useState({ min: "", max: "" }); // State for price range
+  const [priceFilterType, setPriceFilterType] = useState("harga_awal"); // State for price filter type
+  const [showDateRangePopup, setShowDateRangePopup] = useState(false); // State for showing date range popup
+  const [showPriceRangePopup, setShowPriceRangePopup] = useState(false); // State for showing price range popup
 
   useEffect(() => {
     handleGetLelang();
@@ -57,7 +69,7 @@ const Lelang = () => {
 
   const getHighestBid = (idLelang) => {
     const bids = penawaran.filter(p => p.id_lelang === idLelang);
-    if (bids.length === 0) return null;
+    if (bids.length === 0) return { nominal: 0 };
     return bids.reduce((prev, current) => (prev.nominal > current.nominal) ? prev : current);
   };
 
@@ -89,16 +101,125 @@ const Lelang = () => {
     closeHistoryPopup();
   };
 
+  // Filter lelang data based on search query, date range, and price range
+  const filteredLelang = dataLelang.filter(lelang => {
+    const matchesSearchQuery = lelang.nama_barang.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lelang.deskripsi_barang.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const lelangDate = new Date(lelang.tanggal);
+    const matchesDateRange = (!startDate || lelangDate >= new Date(startDate)) && (!endDate || lelangDate <= new Date(endDate));
+
+    const highestBid = getHighestBid(lelang.id_lelang);
+    const effectivePrice = priceFilterType === 'nominal' ? highestBid.nominal : lelang.harga_awal;
+    const matchesPriceRange = (!priceRange.min || effectivePrice >= Number(priceRange.min)) &&
+      (!priceRange.max || effectivePrice <= Number(priceRange.max));
+
+    return matchesSearchQuery && matchesDateRange && matchesPriceRange;
+  });
+
+  // Sort lelang data based on sort option
+  const sortedLelang = filteredLelang.sort((a, b) => {
+    let highestBidA, highestBidB;
+    switch (sortOption) {
+      case "harga_awal_tertinggi":
+        return b.harga_awal - a.harga_awal;
+      case "harga_awal_terendah":
+        return a.harga_awal - b.harga_awal;
+      case "penawaran_tertinggi":
+        highestBidA = getHighestBid(a.id_lelang);
+        highestBidB = getHighestBid(b.id_lelang);
+        return (highestBidB.nominal ? highestBidB.nominal : 0) - (highestBidA.nominal ? highestBidA.nominal : 0);
+      case "penawaran_terendah":
+        highestBidA = getHighestBid(a.id_lelang);
+        highestBidB = getHighestBid(b.id_lelang);
+        return (highestBidA.nominal ? highestBidA.nominal : 0) - (highestBidB.nominal ? highestBidB.nominal : 0);
+      default:
+        return 0;
+    }
+  });
+
   return (
     <>
       <Header title="Lelang" />
       <div className="grid grid-cols-12 gap-2 w-full pt-2">
         <div className="order-3 col-span-8 lg:col-span-4 lg:order-3">
-          <Search />
+          <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
+        </div>
+        <div className="order-4 col-span-4 lg:col-span-2 lg:order-4">
+          <select
+            onChange={(e) => setFilterColumn(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            value={filterColumn}
+          >
+            <option value="semuanya">Cari Semuanya</option>
+            <option value="nama_barang">Cari Barang</option>
+            <option value="tanggal">Cari Tanggal</option>
+          </select>
+        </div>
+        <div className="order-5 col-span-4 lg:col-span-2 lg:order-5">
+          <select
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            value={statusFilter}
+          >
+            <option value="semua">Status</option>
+            <option value="dibuka">Buka</option>
+            <option value="ditutup">Tutup</option>
+          </select>
+        </div>
+        <div className="order-6 col-span-4 lg:col-span-2 lg:order-6">
+          <select
+            onChange={(e) => setSortOption(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            value={sortOption}
+          >
+            <option value="">Urutkan Harga</option>
+            <option value="harga_awal_tertinggi">Harga Tertinggi</option>
+            <option value="harga_awal_terendah">Harga Terendah</option>
+            <option value="penawaran_tertinggi">Penawaran Tertinggi</option>
+            <option value="penawaran_terendah">Penawaran Terendah</option>
+          </select>
+        </div>
+        <div className="order-7 col-span-2 lg:col-span-2 lg:order-7 flex justify-start items-start">
+          <button
+            className="bg-blue-main text-white p-2 rounded-lg"
+            onClick={() => setShowDateRangePopup(true)}
+          >
+            Filter Tanggal
+          </button>
+        </div>
+        <div className="order-8 col-span-2 lg:col-span-2 lg:order-8 flex justify-start items-start">
+          <button
+            className="bg-blue-main text-white p-2 rounded-lg"
+            onClick={() => setShowPriceRangePopup(true)}
+          >
+            Filter Harga
+          </button>
         </div>
       </div>
+
+      {showDateRangePopup && (
+        <DateRangeFilter
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          closePopup={() => setShowDateRangePopup(false)}
+        />
+      )}
+
+      {showPriceRangePopup && (
+        <PriceRangeFilter
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+          priceFilterType={priceFilterType}
+          setPriceFilterType={setPriceFilterType}
+          closePopup={() => setShowPriceRangePopup(false)}
+        />
+      )}
+
       <section className="pb-[50px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2">
-        {Array.isArray(dataLelang) && dataLelang.map((lelang) => (
+        {Array.isArray(sortedLelang) && sortedLelang.map((lelang) => (
           <Card
             key={lelang.id_lelang}
             onUpdateStatus={(status) => handleUpdateStatus(lelang.id_lelang, lelang.id_barang, status)}

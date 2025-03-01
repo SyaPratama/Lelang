@@ -4,7 +4,9 @@ import html2canvas from "html2canvas";
 import Header from "./components/Header";
 import TableGenerate from "./components/TableGenerate";
 import StrukModalGenerate from "./components/StrukModalGenerate";
-import Search from "./components/Search";
+import SearchBar from "./components/Search";
+import DateRangeFilter from "./components/DateRangeFilter"; // Import DateRangeFilter component
+import PriceRangeFilter from "./components/PriceRangeFilter"; // Import PriceRangeFilter component
 import Swal from "sweetalert2";
 import { getHistory, deleteHistory } from "../../config/api"; // Import getHistory and deleteHistory functions
 import { useAuth } from "../../Auth/AuthContext"; // Import useAuth
@@ -16,6 +18,14 @@ function GenerateLaporan() {
   const [showButton, setShowButton] = useState(true);
   const [reportData, setReportData] = useState([]);
   const { token } = useAuth(); // Get the token from useAuth
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [filterColumn, setFilterColumn] = useState("semuanya"); // State for selected filter column
+  const [startDate, setStartDate] = useState(""); // State for start date
+  const [endDate, setEndDate] = useState(""); // State for end date
+  const [priceRange, setPriceRange] = useState({ min: "", max: "" }); // State for price range
+  const [priceFilterType, setPriceFilterType] = useState("harga_awal"); // State for price filter type
+  const [showDateRangePopup, setShowDateRangePopup] = useState(false); // State for showing date range popup
+  const [showPriceRangePopup, setShowPriceRangePopup] = useState(false); // State for showing price range popup
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -103,19 +113,85 @@ function GenerateLaporan() {
     setIsModalOpen(false);
   };
 
+  // Filter report data based on search query, filter column, date range, and price range
+  const filteredReportData = reportData.filter((row) => {
+    const matchesSearchQuery = filterColumn === "semuanya"
+      ? Object.values(row).some(value => value.toString().toLowerCase().includes(searchQuery.toLowerCase()))
+      : row[filterColumn]?.toString().toLowerCase().includes(searchQuery.toLowerCase());
+
+    const rowDate = new Date(row.tanggal);
+    const matchesDateRange = (!startDate || rowDate >= new Date(startDate)) && (!endDate || rowDate <= new Date(endDate));
+
+    const matchesPriceRange = (!priceRange.min || row[priceFilterType] >= Number(priceRange.min)) &&
+      (!priceRange.max || row[priceFilterType] <= Number(priceRange.max));
+
+    return matchesSearchQuery && matchesDateRange && matchesPriceRange;
+  });
+
   return (
     <>
       <Header title="Generate Laporan" />
 
       <div className="grid grid-cols-12 gap-2 w-full pt-2">
         <div className="order-3 col-span-8 lg:col-span-4 lg:order-3">
-          <Search />
+          <SearchBar onSearch={setSearchQuery} />
+        </div>
+        <div className="order-4 col-span-4 lg:col-span-2 lg:order-4">
+          <select
+            onChange={(e) => setFilterColumn(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            value={filterColumn}
+          >
+            <option value="semuanya">Semuanya</option>
+            <option value="nama_lengkap">Username</option>
+            <option value="tanggal">Tanggal</option>
+            <option value="nama_barang">Nama Barang</option>
+            <option value="harga_awal">Harga Awal</option>
+            <option value="nominal">Nominal</option>
+            <option value="telp">Telepon</option>
+          </select>
+        </div>
+        <div className="order-5 col-span-4 lg:col-span-2 lg:order-5">
+          <button
+            className="bg-blue-main text-white p-2 rounded-lg"
+            onClick={() => setShowDateRangePopup(true)}
+          >
+            Filter Tanggal
+          </button>
+        </div>
+        <div className="order-6 col-span-4 lg:col-span-2 lg:order-6">
+          <button
+            className="bg-blue-main text-white p-2 rounded-lg"
+            onClick={() => setShowPriceRangePopup(true)}
+          >
+            Filter Harga
+          </button>
         </div>
       </div>
 
+      {showDateRangePopup && (
+        <DateRangeFilter
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          closePopup={() => setShowDateRangePopup(false)}
+        />
+      )}
+
+      {showPriceRangePopup && (
+        <PriceRangeFilter
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+          priceFilterType={priceFilterType}
+          setPriceFilterType={setPriceFilterType}
+          closePopup={() => setShowPriceRangePopup(false)}
+        />
+      )}
+
       <TableGenerate
         handleCetakClick={handleCetakClick}
-        reportData={reportData}
+        reportData={filteredReportData}
         handleDeleteReport={handleDeleteReport}
       />
 
