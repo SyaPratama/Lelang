@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran, deletePenawaran, editPenawaran, getHighestBid, postHistory, deleteHistory } from "../../../config/api";
+import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran, deletePenawaran, editPenawaran, getHighestBid, postHistory, deleteHistory, getHistory, editHistory } from "../../../config/api";
 import { useAuth } from "../../../Auth/AuthContext";
 
 const initialLelang = {
@@ -23,6 +23,7 @@ const initialLelang = {
   handleGetHighestBid: () => {},
   handlePostHistory: () => {},
   handleDeleteHistory: () => {},
+  handleEditHistory: () => {},
 };
 
 const LelangContext = createContext(initialLelang);
@@ -253,10 +254,27 @@ const LelangProvider = ({ children }) => {
 
   const handlePostHistory = async (id_penawaran) => {
     try {
-      const response = await postHistory({ id_penawaran }, token);
-      return response.data;
+      const historyResponse = await getHistory(token);
+      const historyData = historyResponse.data.data.history;
+      const penawaranResponse = await getPenawaran();
+      const penawaranData = penawaranResponse.data.data.dataPenawaran;
+
+      // Get the latest highest bid for the lelang related to id_penawaran
+      const currentPenawaran = penawaranData.find(p => p.id_penawaran === id_penawaran);
+      const highestBid = penawaranData.filter(p => p.id_lelang === currentPenawaran.id_lelang)
+        .reduce((prev, current) => (prev.nominal > current.nominal ? prev : current), { nominal: 0 });
+
+      const existingHistory = historyData.find(history => history.id_lelang === currentPenawaran.id_lelang);
+
+      if (existingHistory) {
+        const response = await editHistory(existingHistory.id_history, { id_penawaran: highestBid.id_penawaran }, token);
+        return response.data;
+      } else {
+        const response = await postHistory({ id_penawaran: highestBid.id_penawaran }, token);
+        return response.data;
+      }
     } catch (error) {
-      console.error("Failed to post history:", error);
+      console.error("Failed to post or edit history:", error);
       throw error;
     }
   };

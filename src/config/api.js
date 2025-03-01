@@ -297,6 +297,21 @@ export const getHistory = async (token) => {
   }
 };
 
+// Function to edit history
+export const editHistory = async (id_history, data, token) => {
+  try {
+    const response = await axios.put(`${https}/history/${id_history}`, data, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 // Function to delete history
 export const deleteHistory = async (id_history, token) => {
   try {
