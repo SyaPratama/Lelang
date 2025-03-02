@@ -23,7 +23,7 @@ const DropdownStatusLelang = ({ onStatusChange, currentStatus }) => {
       <div>
         <button
           onClick={toggleDropdown}
-          className="inline-flex justify-center h-[41px] items-center w-full rounded-md pl-2 py-1 bg-none border-2 border-[#4365D1] hover:border-[#718ADE]  text-sm font-medium text-[#4365D1] hover:text-white hover:bg-[#718ADE] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-500"
+          className="inline-flex justify-center h-[41px] items-center w-full rounded-md pl-2 py-1 bg-none border-2 bg-[#EAF0FC] border-[#4365D1] hover:border-[#718ADE]  text-sm font-medium text-[#4365D1] hover:text-white hover:bg-[#718ADE] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-500"
         >
           {status === "dibuka" ? "dibuka" : "ditutup"}
           <svg

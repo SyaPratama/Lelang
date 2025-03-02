@@ -65,7 +65,7 @@ const TableGenerate = ({ handleCetakClick, reportData, handleDeleteReport }) => 
                   <td className="py-2 px-4 border-b border-gray-200">{row.telp || "N/A"}</td>
                   <td className="py-2 px-4 border-b border-gray-200 pr-0 m-0">
                   <button
-                      className="bg-red-600 text-white py-1 px-2 rounded ml-2"
+                      className="bg-[#FF4E4E] hover:bg-[#FF6363] text-white py-1 px-2 rounded ml-2"
                       onClick={() => confirmDelete(index, row.id_history)}
                     >
                       <Trash className='w-5 h-5 text-white inline '/>

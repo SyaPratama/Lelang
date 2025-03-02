@@ -10,6 +10,7 @@ import PriceRangeFilter from "./components/PriceRangeFilter"; // Import PriceRan
 import Swal from "sweetalert2";
 import { getHistory, deleteHistory } from "../../config/api"; // Import getHistory and deleteHistory functions
 import { useAuth } from "../../Auth/AuthContext"; // Import useAuth
+import { Banknote, Calendar } from "lucide-react";
 
 function GenerateLaporan() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -158,16 +159,16 @@ function GenerateLaporan() {
              
           <div className="order-4 col-span-12 sm:col-span-6 md:col-span-4 2xl:col-span-3 flex justify-start items-start gap-2">
           <button
-            className="bg-blue-main text-white p-2 col-span-5 w-full rounded-lg"
+            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
             onClick={() => setShowDateRangePopup(true)}
           >
-            Filter Tanggal
+            <Calendar className="w-5 h-5 mr-2" /> Tanggal
           </button>
           <button
-            className="bg-blue-main text-white col-span-5 p-2 w-full rounded-lg"
+            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
             onClick={() => setShowPriceRangePopup(true)}
           >
-            Filter Harga
+            <Banknote className="w-5 h-5 mr-2" /> Harga
           </button>
           </div>
           </div>

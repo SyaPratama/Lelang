@@ -8,6 +8,7 @@ import { useAuth } from "../../Auth/AuthContext"; // Sesuaikan dengan path yang 
 import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
 import DateRangeFilter from '../Admin/components/DateRangeFilter'; // Import DateRangeFilter component
 import PriceRangeFilter from '../Admin/components/PriceRangeFilter'; // Import PriceRangeFilter component
+import { Banknote, Calendar } from 'lucide-react';
 
 const DasboardMasyarakat = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
@@ -119,16 +120,16 @@ const DasboardMasyarakat = () => {
             <option value="ditutup">Tutup</option>
           </select>
           <button
-            className="col-span-6 sm:col-span-4 text-white p-2 bg-[#4365D1] border-1 border-gray-200  rounded-lg"
+            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
             onClick={() => setShowDateRangePopup(true)}
           >
-            Filter Tanggal
+            <Calendar className="w-5 h-5 mr-2" /> Tanggal
           </button>
           <button
-            className="col-span-6 sm:col-span-4 text-white p-2 bg-[#4365D1] border-1 border-gray-200 rounded-lg"
+            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
             onClick={() => setShowPriceRangePopup(true)}
           >
-            Filter Harga
+            <Banknote className="w-5 h-5 mr-2" /> Harga
           </button>
           
         </div>

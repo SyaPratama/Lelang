@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import Card from "./components/Card";
@@ -9,12 +8,13 @@ import DateRangeFilter from './components/DateRangeFilter'; // Import DateRangeF
 import PriceRangeFilter from './components/PriceRangeFilter'; // Import PriceRangeFilter component
 import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
 import { useAuth } from "../../Auth/AuthContext";
+import { Banknote, Calendar } from "lucide-react";
 
 function PendataanBarang() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { name} = useAuth();
+  const { name } = useAuth();
   const [selectedItem, setSelectedItem] = useState(null); // Tambahkan state untuk item yang dipilih
-  const { barang, dataLelang, handleGetBarang, handleGetLelang, handleEditBarang, handleDeleteBarang, handleAddLelang } = useLelang();
+  const { barang, dataLelang, handleGetBarang, handleGetLelang, handleEditBarang, handleDeleteBarang, handleAddLelang, handleDeleteLelang } = useLelang();
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [filterColumn, setFilterColumn] = useState("semuanya"); // State for selected filter column
   const [sortOption, setSortOption] = useState(""); // State for sort option
@@ -23,6 +23,7 @@ function PendataanBarang() {
   const [priceRange, setPriceRange] = useState({ min: "", max: "" }); // State for price range
   const [showDateRangePopup, setShowDateRangePopup] = useState(false); // State for showing date range popup
   const [showPriceRangePopup, setShowPriceRangePopup] = useState(false); // State for showing price range popup
+  const [lelangFilter, setLelangFilter] = useState("semua"); // State for lelang filter
 
   useEffect(() => {
     handleGetBarang();
@@ -80,7 +81,6 @@ function PendataanBarang() {
     if (result.isConfirmed) {
       const lelangData = {
         id_barang: id_barang,
-        // tgl_lelang: new Date().toISOString().split('T')[0], // Set tanggal lelang ke hari ini
         status: "dibuka"
       };
       await handleAddLelang(lelangData);
@@ -93,6 +93,32 @@ function PendataanBarang() {
     }
   };
 
+  const handleBatalLelang = async (id_barang) => {
+    const lelang = dataLelang.find(lelang => lelang.id_barang === id_barang);
+    if (!lelang) return;
+
+    const result = await Swal.fire({
+      title: 'Apakah kamu yakin?',
+      text: "Lelang ini akan dibatalkan!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, batal!',
+      cancelButtonText: 'Batal'
+    });
+
+    if (result.isConfirmed) {
+      await handleDeleteLelang(lelang.id_lelang);
+      Swal.fire(
+        'Dibatalkan!',
+        'Lelang telah dibatalkan.',
+        'success'
+      );
+      handleGetLelang(); // Refresh lelang data after deleting
+    }
+  };
+
   const handleModalOpen = () => {
     setSelectedItem(null); // Reset selected item saat menambah barang baru
     setIsModalOpen(true);
@@ -102,7 +128,7 @@ function PendataanBarang() {
     setIsModalOpen(false);
   };
 
-  // Filter barang data based on search query, filter column, date range, and price range
+  // Filter barang data based on search query, filter column, date range, price range, and lelang filter
   const filteredBarang = barang.filter(item => {
     const matchesSearchQuery = filterColumn === "semuanya"
       ? Object.values(item).some(value => value.toString().toLowerCase().includes(searchQuery.toLowerCase()))
@@ -114,7 +140,10 @@ function PendataanBarang() {
     const matchesPriceRange = (!priceRange.min || item.harga_awal >= Number(priceRange.min)) &&
       (!priceRange.max || item.harga_awal <= Number(priceRange.max));
 
-    return matchesSearchQuery && matchesDateRange && matchesPriceRange;
+    const lelangExists = dataLelang.find(lelang => lelang.id_barang === item.id_barang);
+    const matchesLelangFilter = lelangFilter === "semua" || (lelangFilter === "belum" && lelangExists) || (lelangFilter === "sudah" && !lelangExists);
+
+    return matchesSearchQuery && matchesDateRange && matchesPriceRange && matchesLelangFilter;
   });
 
   // Sort barang data based on sort option
@@ -142,11 +171,11 @@ function PendataanBarang() {
               Tambah
             </button>
           </div>
-          <div className="order-1 md:order-2 col-span-8 sm:col-span-9 md:col-span-7 lg:col-span-5 xl:col-span-5">
+          <div className="order-1 md:order-2 col-span-8 sm:col-span-9 md:col-span-7 lg:col-span-5 xl:col-span-4">
             <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
           </div>
           
-          <div className="order-5  col-span-12 md:col-span-3 lg:col-span-2">
+          <div className="order-5  col-span-6 md:col-span-3 lg:col-span-2">
             <select
               onChange={(e) => setSortOption(e.target.value)}
               className="w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC] rounded-lg"
@@ -157,20 +186,31 @@ function PendataanBarang() {
               <option className="bg-white text-gray-600" value="harga_awal_terendah">Harga Terendah</option>
             </select>
           </div>
+          <div className="order-6 col-span-6 md:col-span-3 lg:col-span-2 ">
+            <select
+              onChange={(e) => setLelangFilter(e.target.value)}
+              className="w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC] rounded-lg"
+              value={lelangFilter}
+            >
+              <option className="bg-white text-gray-600" value="semua">Semua Barang</option>
+              <option className="bg-white text-gray-600" value="sudah">Sudah Dilelang</option>
+              <option className="bg-white text-gray-600" value="belum">Belum Dilelang</option>
+            </select>
+          </div>
              
-          <div className="order-6 col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-3 flex justify-start items-start gap-2">
-            <button
-              className="bg-blue-main border-1 text-white border-gray-300 w-full shadow-sm p-2 px-1 rounded-lg"
-              onClick={() => setShowPriceRangePopup(true)}
-            >
-              Filter Harga
-            </button>
-            <button
-              className="bg-blue-main text-white border-1 border-gray-300 w-full shadow-sm p-2 px-1 rounded-lg"
-              onClick={() => setShowDateRangePopup(true)}
-            >
-              Filter Tanggal
-            </button>
+          <div className="order-7 col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-3 xl:col-span-2 flex justify-start items-start gap-2">
+          <button
+            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
+            onClick={() => setShowDateRangePopup(true)}
+          >
+            <Calendar className="w-5 h-5 mr-2" /> Tanggal
+          </button>
+          <button
+            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
+            onClick={() => setShowPriceRangePopup(true)}
+          >
+            <Banknote className="w-5 h-5 mr-2" /> Harga
+          </button>
           </div>
           </div>
         </div>
@@ -196,23 +236,28 @@ function PendataanBarang() {
 
 
         <section className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-2 h-[100vh] pb-[350px] scrollable-content pt-2">
-        {Array.isArray(sortedBarang) && sortedBarang.map((item) => (
-          <Card
-            key={item.id_barang}
-            onDelete={() => handleDelete(item.id_barang)}
-            onEdit={() => handleEdit(item.id_barang)}
-            onLelang={() => handleLelang(item.id_barang)}
-            showMainButtons={true} // Menampilkan tombol edit, hapus, tambah
-            title={item.nama_barang}
-            description={item.deskripsi_barang}
-            price={item.harga_awal}
-            date={item.tanggal}
-            imageUrl={item.foto} // Tambahkan URL gambar jika tersedia
-            status={item.status} // Tambahkan status barang
-            hideStatus={true} // Jangan tampilkan status di halaman pendataan
-            hideHighBid={true} // Jangan tampilkan teks "Belum ada penawaran"
-          />
-        ))}
+        {Array.isArray(sortedBarang) && sortedBarang.map((item) => {
+          const lelangExists = dataLelang.find(lelang => lelang.id_barang === item.id_barang);
+          return (
+            <Card
+              key={item.id_barang}
+              onDelete={() => handleDelete(item.id_barang)}
+              onEdit={() => handleEdit(item.id_barang)}
+              onLelang={() => handleLelang(item.id_barang)}
+              onBatal={() => handleBatalLelang(item.id_barang)}
+              showMainButtons={true} // Menampilkan tombol edit, hapus, tambah
+              title={item.nama_barang}
+              description={item.deskripsi_barang}
+              price={item.harga_awal}
+              date={item.tanggal}
+              imageUrl={item.foto} // Tambahkan URL gambar jika tersedia
+              status={item.status} // Tambahkan status barang
+              hideStatus={true} // Jangan tampilkan status di halaman pendataan
+              hideHighBid={true} // Jangan tampilkan teks "Belum ada penawaran"
+              isLelang={!!lelangExists} // Tambahkan prop isLelang untuk menandai apakah barang sudah dilelang
+            />
+          );
+        })}
       </section>
       </section>
 
