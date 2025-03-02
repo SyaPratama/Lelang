@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Trash2, Pencil, Plus, History, Banknote, Gavel } from "lucide-react"; // Tambahkan ikon History
+import { Trash2, Pencil, History, Banknote, Gavel } from "lucide-react"; // Tambahkan ikon History
 import DropdownStatusLelang from "./DropDownStatusLelang";
 import { https } from "../../../config/url";
 

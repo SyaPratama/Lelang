@@ -65,7 +65,7 @@ const Login = () => {
             </button>
           </form>
           <p className="text-center text-sm text-gray-500 mt-4">
-            Belum punya akun? <Link to="/registrasi" className="text-[#005f8f] font-bold hover:underline">Sign Up</Link>
+            Belum punya akun? <Link to="/registrasi" className=" font-bold hover:underline">Sign Up</Link>
           </p>
         </div>
       </section>

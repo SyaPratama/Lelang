@@ -87,19 +87,30 @@ const DasboardMasyarakat = () => {
 
   return (
     <>
-      <section className="p-2 max-w-[900px] mx-auto">
-        <div className="flex justify-end p-4">
+    
+    <div className='bg-white flex fixed w-full px-2 z-30'>
+    <div className="flex justify-center align-middle items-center py-4 gap-1 w-full max-w-[880px] mx-auto">
           <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
           {!isLoggedin && (
             <Link to="/login" className="btn btn-primary">
-              Login
+              <div className='bg-blue-main text-white px-5 py-2 rounded-lg'>
+                Login
+              </div>
             </Link>
           )}
         </div>
+    </div>
 
-        <div className="grid grid-cols-12 mt-4 gap-1">
+    <div className='flex flex-col relative'>
+
+
+    
+      <section className="p-2 pt-16 max-w-[900px] mx-auto ">
+        
+
+        <div className="grid grid-cols-12 mt-4 gap-1 bg-white p-5">
         <select
-            className="col-span-12 sm:col-span-4 border-0 text-dark-100 p-2 bg-[#ffffff] shadow-sm rounded-lg"
+            className="col-span-12 sm:col-span-4 border-0 w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC] rounded-lg"
             onChange={(e) => setStatusFilter(e.target.value)}
             value={statusFilter}
           >
@@ -108,13 +119,13 @@ const DasboardMasyarakat = () => {
             <option value="ditutup">Tutup</option>
           </select>
           <button
-            className="col-span-6 sm:col-span-4 text-dark-100 p-2 bg-[#ffffff] shadow-2xl  rounded-lg"
+            className="col-span-6 sm:col-span-4 text-white p-2 bg-[#4365D1] border-1 border-gray-200  rounded-lg"
             onClick={() => setShowDateRangePopup(true)}
           >
             Filter Tanggal
           </button>
           <button
-            className="col-span-6 sm:col-span-4 text-dark-100 p-2 bg-[#ffffff] shadow-2xl rounded-lg"
+            className="col-span-6 sm:col-span-4 text-white p-2 bg-[#4365D1] border-1 border-gray-200 rounded-lg"
             onClick={() => setShowPriceRangePopup(true)}
           >
             Filter Harga
@@ -145,7 +156,20 @@ const DasboardMasyarakat = () => {
         {Array.isArray(filteredLelang) && filteredLelang.length === 0 ? (
           <p className="text-center">Tidak ada data lelang tersedia.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2 h-[100vh] pb-[200px] scrollable-content">
+          <div className=' scrollable-content h-[100vh] pb-[200px] mt-2'>
+          
+           
+          <div className="bg-[#6E82B9] text-white p-4 mx-2 flex justify-between items-center mb-2 rounded-lg shadow-md ">
+          <div className="flex items-center">
+            <div>
+              <h1 className="text-xl font-bold">Hallo, Selamat Datang!</h1>
+              <p>Mau lelang? hubungi kami sekarang</p>
+            </div>
+          </div>
+          <button className="bg-[#EBF2FC] text-[#4365D1] font-semibold p-2 rounded-lg shadow-md">Hubungi</button>
+        </div>
+        
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
             {filteredLelang.map((lelang) => (
               <Card
                 key={lelang.id_lelang}
@@ -164,11 +188,17 @@ const DasboardMasyarakat = () => {
               />
             ))}
           </div>
+          
+          
+          </div>
         )}
         {showHistoryPopup && (
           <HistoryPenawaran historyData={selectedHistory} closePopup={closeHistoryPopup} />
         )}
+        
       </section>
+         
+      </div>
     </>
   );
 };

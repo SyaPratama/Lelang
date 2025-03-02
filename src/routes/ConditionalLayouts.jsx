@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import DasboardAdmin from "../moduls/Admin/DasboardAdmin";
-import PendataanBarang from "../moduls/Admin/PendataanBarang";
+import PendataanBarang from "../moduls/Admin/pendataanBarang";
 import GenerateLaporan from "../moduls/Admin/GenerateLaporan";
 import Lelang from "../moduls/Admin/Lelang";
 import DasboardMasyarakat from "../moduls/Masyarakat/DasboardMasyarakat";
@@ -25,7 +25,7 @@ const ConditionalLayout = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<LoginAdmin />} />
           <Route path="/registrasi" element={<Registrasi />} />
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </>
       ) : (
         <>

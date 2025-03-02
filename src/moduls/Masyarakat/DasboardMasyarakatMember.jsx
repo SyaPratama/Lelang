@@ -10,7 +10,7 @@ import DateRangeFilter from '../Admin/components/DateRangeFilter'; // Import Dat
 import PriceRangeFilter from '../Admin/components/PriceRangeFilter'; // Import PriceRangeFilter component
 
 const MainLayoutsMasyarakatMember = () => {
-  const { name, isLoggedin } = useAuth();
+  const { name,  isLoggedin } = useAuth();
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState([]);
   const [showBidPopup, setShowBidPopup] = useState(false);
@@ -119,31 +119,24 @@ const MainLayoutsMasyarakatMember = () => {
 
   return (
     <>
-      <section className="p-2 max-w-[900px] mx-auto">
-        <div className="flex">
-          <div className="flex justify-between w-full">
-            <div className='w-225'>
+     <div className="flex fixed w-full bg-white">
+          <div className="grid grid-cols-12 w-full gap-1  p-2 items-center max-w-[900px] mx-auto">
+            <div className='col-span-8 sm:col-span-10'>
               <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
             </div>
-            <div className='w-10 flex justify-end'>
+            <div className='col-span-4 sm:col-span-2'>
               <HeaderMasyarakat name={name} />
             </div>
           </div>
         </div>
 
-        <div className="bg-blue-main text-white p-4 flex justify-between items-center mt-4 rounded-lg shadow-md">
-          <div className="flex items-center">
-            <div>
-              <h1 className="text-xl font-bold">Hallo, Selamat Datang!</h1>
-              <p>Mau lelang? hubungi kami sekarang</p>
-            </div>
-          </div>
-          <button className="bg-blue-dark text-blue-main p-2 rounded-lg shadow-md">Hubungi</button>
-        </div>
+      <section className="pt-16 max-w-[900px] mx-auto">
+       
 
-        <div className="grid grid-cols-12 mt-4 gap-1">
+        
+        <div className="grid grid-cols-12 mt-2 gap-1 bg-white p-5">
         <select
-            className="col-span-12 sm:col-span-4 border-0 text-dark-100 p-2 bg-[#ffffff] shadow-sm rounded-lg"
+            className="col-span-12 sm:col-span-4 border-0 text-dark-100 w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC] rounded-lg"
             onChange={(e) => setStatusFilter(e.target.value)}
             value={statusFilter}
           >
@@ -152,13 +145,13 @@ const MainLayoutsMasyarakatMember = () => {
             <option value="ditutup">Tutup</option>
           </select>
           <button
-            className="col-span-6 sm:col-span-4 text-dark-100 p-2 bg-[#ffffff] shadow-2xl  rounded-lg"
+            className="col-span-6 sm:col-span-4 text-white p-2 bg-[#4365D1] shadow-2xl  rounded-lg"
             onClick={() => setShowDateRangePopup(true)}
           >
             Filter Tanggal
           </button>
           <button
-            className="col-span-6 sm:col-span-4 text-dark-100 p-2 bg-[#ffffff] shadow-2xl rounded-lg"
+            className="col-span-6 sm:col-span-4 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg"
             onClick={() => setShowPriceRangePopup(true)}
           >
             Filter Harga
@@ -189,7 +182,24 @@ const MainLayoutsMasyarakatMember = () => {
         {Array.isArray(filteredLelang) && filteredLelang.length === 0 ? (
           <p className="text-center">Tidak ada data lelang tersedia.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2 h-[100vh] pb-[200px] scrollable-content">
+
+          <div className=' scrollable-content h-[100vh] pb-[250px] mt-2'>
+          
+           
+          <div className="bg-[#6E82B9] text-white p-4 mx-2 flex justify-between items-center mb-2 rounded-lg shadow-md ">
+          <div className="flex items-center">
+            <div>
+              <h1 className="text-xl font-bold">Hallo, Selamat Datang!</h1>
+              <p>Mau lelang? hubungi kami sekarang</p>
+            </div>
+          </div>
+          <button className="bg-[#EBF2FC] text-[#4365D1]  p-2 rounded-lg shadow-md">Hubungi</button>
+        </div>
+        
+        
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 ">
+
+            
             {filteredLelang.map((lelang) => {
               const userBid = getUserBid(lelang.id_lelang);
               return (
@@ -212,6 +222,10 @@ const MainLayoutsMasyarakatMember = () => {
               );
             })}
           </div>
+          
+          
+          </div>
+          
         )}
         {showHistoryPopup && (
           <HistoryPenawaran
@@ -232,6 +246,7 @@ const MainLayoutsMasyarakatMember = () => {
             isEdit={isEdit}
           />
         )}
+        
       </section>
     </>
   );

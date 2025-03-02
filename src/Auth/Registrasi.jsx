@@ -111,7 +111,7 @@ const Registrasi = () => {
             </button>
           </form>
           <p className="text-center text-sm text-gray-500 mt-4">
-            Sudah punya akun? <Link to="/login" className="text-[#005f8f] font-bold hover:underline">Login</Link>
+            Sudah punya akun? <Link to="/login" className=" font-bold hover:underline">Login</Link>
           </p>
         </div>
       </section>

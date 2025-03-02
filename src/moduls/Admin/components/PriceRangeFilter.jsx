@@ -42,10 +42,10 @@ const PriceRangeFilter = ({ priceRange, setPriceRange, priceFilterType, setPrice
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
             />
-            <div className="flex justify-between">
+            <div className="flex gap-3">
               <button
                 type="button"
-                className="bg-red-500 text-white p-2 rounded-lg"
+                className="bg-blue-main text-white p-2 rounded-lg"
                 onClick={() => {
                   setMinPrice("");
                   setMaxPrice("");

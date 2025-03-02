@@ -78,7 +78,7 @@ const DasboardAdmin = () => {
       <section className="scrollable-content">
         <div className="py-8 pt-5 pb-[150px]">
           <div className="relative bg-cover bg-center h-50 mb-8 rounded-lg overflow-hidden shadow-lg">
-            <div className="absolute inset-0 bg-black opacity-50"></div>
+            <div className="absolute inset-0 bg-[#6E82B9]"></div>
             <div className="relative z-10 flex flex-col items-start justify-center h-full text-white p-5">
               <h1 className="text-[34px] font-bold">Selamat Datang, {name}!</h1>
               <p className="text-xl mt-2">Pantau aktivitas lelang dan data penting lainnya di sini</p>
