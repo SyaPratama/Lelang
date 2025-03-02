@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Trash2, Pencil, History, Banknote, Gavel } from "lucide-react"; // Tambahkan ikon History
-import DropdownStatusLelang from "./DropDownStatusLelang";
-import { https } from "../../../config/url";
+import DropdownStatusLelang from "./DropdownStatusLelang.jsx";
+import { https } from "../../../config/url.js";
 
 const Card = ({
   onDelete,
