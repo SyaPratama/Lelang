@@ -130,13 +130,16 @@ function GenerateLaporan() {
 
   return (
     <>
-      <Header title="Generate Laporan" />
+    <section className="">
+        <div className=" pb-[25px]">
 
-      <div className="grid grid-cols-12 gap-2 w-full pt-2">
-        <div className="order-3 col-span-8 lg:col-span-4 lg:order-3">
-          <SearchBar onSearch={setSearchQuery} />
-        </div>
-        <div className="order-4 col-span-4 lg:col-span-2 lg:order-4">
+        <Header title="Laporan" />
+        <div className="grid grid-cols-12 gap-2 w-full pt-2">
+          <div className="order-1 md:order-2 col-span-12 sm:col-span-7 md:col-span-8 lg:col-span-5 xl:col-span-5">
+            <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
+          </div>
+          
+          <div className="order-3 col-span-12 sm:col-span-3 md:col-span-3 lg:col-span-2">
           <select
             onChange={(e) => setFilterColumn(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-lg"
@@ -150,25 +153,29 @@ function GenerateLaporan() {
             <option value="nominal">Nominal</option>
             <option value="telp">Telepon</option>
           </select>
-        </div>
-        <div className="order-5 col-span-4 lg:col-span-2 lg:order-5">
+          </div>
+             
+          <div className="order-4 col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-5 flex justify-start items-start gap-2">
           <button
-            className="bg-blue-main text-white p-2 rounded-lg"
+            className="bg-blue-main text-white p-2 col-span-6 w-full rounded-lg"
             onClick={() => setShowDateRangePopup(true)}
           >
             Filter Tanggal
           </button>
-        </div>
-        <div className="order-6 col-span-4 lg:col-span-2 lg:order-6">
           <button
-            className="bg-blue-main text-white p-2 rounded-lg"
+            className="bg-blue-main text-white col-span-6 p-2 w-full rounded-lg"
             onClick={() => setShowPriceRangePopup(true)}
           >
             Filter Harga
           </button>
+          </div>
+          </div>
         </div>
-      </div>
 
+      
+      
+
+      
       {showDateRangePopup && (
         <DateRangeFilter
           startDate={startDate}
@@ -189,11 +196,17 @@ function GenerateLaporan() {
         />
       )}
 
-      <TableGenerate
+<div className="h-[100vh] pb-[200px] scrollable-content ">
+<TableGenerate
         handleCetakClick={handleCetakClick}
         reportData={filteredReportData}
         handleDeleteReport={handleDeleteReport}
       />
+</div>
+      
+
+     
+      </section>
 
       <StrukModalGenerate
         isModalOpen={isModalOpen}

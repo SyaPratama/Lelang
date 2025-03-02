@@ -39,9 +39,10 @@ const Card = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-visible w-full max-w-sm mx-auto hover:shadow-lg transition-shadow duration-300 group">
+    <div>
+    <div className="group">
   {/* Container Gambar */}
-  <div className="relative rounded-t-lg overflow-hidden">
+  <div className="relative rounded-t-lg overflow-hidden group">
     <div className="p-4 bg-white">
       <div className="overflow-hidden rounded-md">
         <img
@@ -64,15 +65,15 @@ const Card = ({
 
 
       {/* Content Section */}
-      <div className="p-4 pt-0">
+      <div className="p-4 pt-0 bg-white group h-[200px] flex flex-col justify-between">
         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
         <p className="text-sm text-gray-500">
           {date ? new Date(date).toLocaleDateString() : "Tanggal tidak tersedia"}
         </p>
         {/* Description with Expandable Logic */}
         <p className="text-gray-700 text-sm break-words">
-          {isExpanded ? description : description.length > 100 ? `${description.slice(0, 100)}...` : description}
-          {description.length > 100 && (
+          {isExpanded ? description : description.length > 50 ? `${description.slice(0, 50)}...` : description}
+          {description.length > 50 && (
             <button
               onClick={toggleDescription}
               className="text-blue-600 ml-1 focus:outline-none"
@@ -167,6 +168,7 @@ const Card = ({
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 };

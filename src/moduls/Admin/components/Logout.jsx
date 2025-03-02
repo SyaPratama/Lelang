@@ -31,7 +31,7 @@ const Logout = () => {
           <div>
             <button
               type="button"
-              className="flex text-sm bg-blue-dark rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-white-500"
+              className="flex justify-center items-center text-sm bg-blue-dark rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-white-500"
               aria-expanded={isUserMenuOpen}
               onClick={toggleUserMenu}
             >

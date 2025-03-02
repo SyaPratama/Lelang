@@ -129,24 +129,22 @@ function PendataanBarang() {
 
   return (
     <>
-      <section className="pb-[50px]">
-        <Header title="Pendataan Barang" />
+      <section className="">
+        <div className="pb-[30px]">
+
+      
+        <Header title="Barang" />
         <div className="grid grid-cols-12 gap-2 w-full pt-2">
-          <div className="order-3 col-span-8 lg:col-span-4 lg:order-3">
+        <div className="order-2 md:order-1 col-span-4 sm:col-span-3 md:col-span-2 lg:col-span-2 flex justify-start items-start xl:col-span-2">
+            <button onClick={handleModalOpen} className="bg-blue-main w-full text-amber-50 py-2 px-2 rounded-lg">
+              Tambah
+            </button>
+          </div>
+          <div className="order-1 md:order-2 col-span-8 sm:col-span-9 md:col-span-7 lg:col-span-5 xl:col-span-5">
             <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
           </div>
-          <div className="order-4 col-span-4 lg:col-span-2 lg:order-4">
-            <select
-              onChange={(e) => setFilterColumn(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              value={filterColumn}
-            >
-              <option value="semuanya">Cari Semuanya</option>
-              <option value="nama_barang">Cari Barang</option>
-              <option value="tanggal">Cari Tanggal</option>
-            </select>
-          </div>
-          <div className="order-5 col-span-4 lg:col-span-2 lg:order-5">
+          
+          <div className="order-5 col-span-12 md:col-span-3 lg:col-span-2">
             <select
               onChange={(e) => setSortOption(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-lg"
@@ -157,28 +155,24 @@ function PendataanBarang() {
               <option value="harga_awal_terendah">Harga Terendah</option>
             </select>
           </div>
-          <div className="order-6 col-span-2 lg:col-span-2 lg:order-6 flex justify-start items-start">
-            <button onClick={handleModalOpen} className="bg-blue-main text-amber-50 py-2 px-2 rounded-lg">
-              Tambah
-            </button>
-          </div>
-          <div className="order-7 col-span-2 lg:col-span-2 lg:order-7 flex justify-start items-start">
+             
+          <div className="order-6 col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-3 flex justify-start items-start gap-2">
             <button
-              className="bg-blue-main text-white p-2 rounded-lg"
+              className="bg-blue-main w-full text-white p-2 px-1 rounded-lg"
+              onClick={() => setShowPriceRangePopup(true)}
+            >
+              Filter Harga
+            </button>
+            <button
+              className="bg-blue-main w-full text-white p-2 px-1 rounded-lg"
               onClick={() => setShowDateRangePopup(true)}
             >
               Filter Tanggal
             </button>
           </div>
-          <div className="order-8 col-span-2 lg:col-span-2 lg:order-8 flex justify-start items-start">
-            <button
-              className="bg-blue-main text-white p-2 rounded-lg"
-              onClick={() => setShowPriceRangePopup(true)}
-            >
-              Filter Harga
-            </button>
           </div>
         </div>
+        
 
         {showDateRangePopup && (
           <DateRangeFilter
@@ -198,27 +192,26 @@ function PendataanBarang() {
           />
         )}
 
-        <div className="pt-1 d-flex justify-start"></div>
-        <h1>List Item</h1>
-        <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-          {Array.isArray(sortedBarang) && sortedBarang.map((item) => (
-            <Card
-              key={item.id_barang}
-              onDelete={() => handleDelete(item.id_barang)}
-              onEdit={() => handleEdit(item.id_barang)}
-              onLelang={() => handleLelang(item.id_barang)}
-              showMainButtons={true} // Menampilkan tombol edit, hapus, tambah
-              title={item.nama_barang}
-              description={item.deskripsi_barang}
-              price={item.harga_awal}
-              date={item.tanggal}
-              imageUrl={item.foto} // Tambahkan URL gambar jika tersedia
-              status={item.status} // Tambahkan status barang
-              hideStatus={true} // Jangan tampilkan status di halaman pendataan
-              hideHighBid={true} // Jangan tampilkan teks "Belum ada penawaran"
-            />
-          ))}
-        </section>
+
+        <section className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-2 h-[100vh] pb-[200px] scrollable-content">
+        {Array.isArray(sortedBarang) && sortedBarang.map((item) => (
+          <Card
+            key={item.id_barang}
+            onDelete={() => handleDelete(item.id_barang)}
+            onEdit={() => handleEdit(item.id_barang)}
+            onLelang={() => handleLelang(item.id_barang)}
+            showMainButtons={true} // Menampilkan tombol edit, hapus, tambah
+            title={item.nama_barang}
+            description={item.deskripsi_barang}
+            price={item.harga_awal}
+            date={item.tanggal}
+            imageUrl={item.foto} // Tambahkan URL gambar jika tersedia
+            status={item.status} // Tambahkan status barang
+            hideStatus={true} // Jangan tampilkan status di halaman pendataan
+            hideHighBid={true} // Jangan tampilkan teks "Belum ada penawaran"
+          />
+        ))}
+      </section>
       </section>
 
       {isModalOpen && (

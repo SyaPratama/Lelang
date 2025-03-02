@@ -101,10 +101,10 @@ const SideBar = () => {
         
         
       </div>
-      <div className='w-full p-[30px]'>
+      <div className='w-full px-[7px] pb-[0px] sm:px-[30px] '>
         <Outlet />
         </div>
-    </div>
+    </div>  
   );
 };
 

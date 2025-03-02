@@ -74,8 +74,11 @@ const DasboardAdmin = () => {
 
   return (
     <>
-      <Header title="Dashboard Admin" name={name} />
-      <div className="container mx-auto py-8">
+    
+      <Header title="Dashboard" name={name} />
+      <section className="scrollable-content ">
+      <div className="py-8 pb-[100px]">
+        
         <div className="relative bg-cover bg-center h-64 mb-8 rounded-lg overflow-hidden shadow-lg">
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="relative z-10 flex flex-col items-start justify-center h-full text-white p-5">
@@ -83,7 +86,9 @@ const DasboardAdmin = () => {
             <p className="text-xl mt-2">Pantau aktivitas lelang dan data penting lainnya di sini</p>
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 ">
           {/* Left Side: Cards */}
           <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white shadow-md rounded-lg p-6 flex items-center">
@@ -130,7 +135,7 @@ const DasboardAdmin = () => {
             </div>
           </div>
           {/* Right Side: Pie Chart */}
-          <div className="bg-white shadow-md rounded-lg p-6">
+          <div className="bg-white shadow-md rounded-lg p-6 ">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">Status Lelang</h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -153,6 +158,8 @@ const DasboardAdmin = () => {
           </div>
         </div>
       </div>
+      </section>
+     
     </>
   );
 };

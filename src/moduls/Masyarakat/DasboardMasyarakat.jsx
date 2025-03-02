@@ -144,7 +144,7 @@ const DasboardMasyarakat = () => {
         {Array.isArray(filteredLelang) && filteredLelang.length === 0 ? (
           <p className="text-center">Tidak ada data lelang tersedia.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2 h-[100vh] pb-[200px] scrollable-content">
             {filteredLelang.map((lelang) => (
               <Card
                 key={lelang.id_lelang}

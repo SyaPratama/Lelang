@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@tailwind utilities;
 @plugin "flowbite/plugin";
 @source "../node_modules/flowbite";
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
@@ -6,6 +7,23 @@
 .root {
     --breakpoint-xs: 800px;
 }
+
+body{
+  overflow-y: hidden;
+}
+
+/* Untuk browser berbasis Webkit (Chrome, Safari) */
+.scrollable-content::-webkit-scrollbar {
+  display: none; /* Sembunyikan scrollbar */
+}
+
+.scrollable-content {
+  overflow-y: scroll; /* Memungkinkan scroll pada elemen section dan div */
+  max-height: 100vh; /* Atur tinggi maksimum agar tidak melebihi viewport */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
 
 .bg-blue-main{
     background-color: #005f8f;

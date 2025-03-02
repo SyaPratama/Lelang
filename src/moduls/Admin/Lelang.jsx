@@ -140,23 +140,16 @@ const Lelang = () => {
 
   return (
     <>
-      <Header title="Lelang" />
-      <div className="grid grid-cols-12 gap-2 w-full pt-2">
-        <div className="order-3 col-span-8 lg:col-span-4 lg:order-3">
-          <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
-        </div>
-        <div className="order-4 col-span-4 lg:col-span-2 lg:order-4">
-          <select
-            onChange={(e) => setFilterColumn(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-            value={filterColumn}
-          >
-            <option value="semuanya">Cari Semuanya</option>
-            <option value="nama_barang">Cari Barang</option>
-            <option value="tanggal">Cari Tanggal</option>
-          </select>
-        </div>
-        <div className="order-5 col-span-4 lg:col-span-2 lg:order-5">
+<section className="">
+        <div className=" pb-[25px]">
+
+        <Header title="Lelang" />
+        <div className="grid grid-cols-12 gap-2 w-full pt-2">
+          <div className="order-1 md:order-2 col-span-12 sm:col-span-9 md:col-span-9 lg:col-span-4 xl:col-span-4">
+            <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
+          </div>
+
+          <div className="order-2 col-span-12 sm:col-span-3 md:col-span-3 lg:col-span-2">
           <select
             onChange={(e) => setStatusFilter(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-lg"
@@ -166,8 +159,9 @@ const Lelang = () => {
             <option value="dibuka">Buka</option>
             <option value="ditutup">Tutup</option>
           </select>
-        </div>
-        <div className="order-6 col-span-4 lg:col-span-2 lg:order-6">
+          </div>
+
+          <div className="order-3 col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
           <select
             onChange={(e) => setSortOption(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-lg"
@@ -179,24 +173,24 @@ const Lelang = () => {
             <option value="penawaran_tertinggi">Penawaran Tertinggi</option>
             <option value="penawaran_terendah">Penawaran Terendah</option>
           </select>
-        </div>
-        <div className="order-7 col-span-2 lg:col-span-2 lg:order-7 flex justify-start items-start">
+          </div>
+             
+          <div className="order-4 col-span-12 sm:col-span-6 md:col-span-8 lg:col-span-3 flex justify-start items-start gap-2">
           <button
-            className="bg-blue-main text-white p-2 rounded-lg"
+            className="bg-blue-main text-white p-2 px-1 rounded-lg w-full"
             onClick={() => setShowDateRangePopup(true)}
           >
-            Filter Tanggal
+            Tanggal
           </button>
-        </div>
-        <div className="order-8 col-span-2 lg:col-span-2 lg:order-8 flex justify-start items-start">
           <button
-            className="bg-blue-main text-white p-2 rounded-lg"
+            className="bg-blue-main text-white col-span-6 p-2 px-1 w-full rounded-lg"
             onClick={() => setShowPriceRangePopup(true)}
           >
-            Filter Harga
+            Harga
           </button>
+          </div>
+          </div>
         </div>
-      </div>
 
       {showDateRangePopup && (
         <DateRangeFilter
@@ -218,7 +212,7 @@ const Lelang = () => {
         />
       )}
 
-      <section className="pb-[50px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-2">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-2 h-[100vh] pb-[200px] scrollable-content ">
         {Array.isArray(sortedLelang) && sortedLelang.map((lelang) => (
           <Card
             key={lelang.id_lelang}
@@ -235,6 +229,7 @@ const Lelang = () => {
             highestBid={getHighestBid(lelang.id_lelang)}
           />
         ))}
+      </div>
       </section>
 
       {showHistoryPopup && (
