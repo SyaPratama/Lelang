@@ -23,11 +23,11 @@ const DropdownStatusLelang = ({ onStatusChange, currentStatus }) => {
       <div>
         <button
           onClick={toggleDropdown}
-          className="inline-flex justify-center w-full rounded-md px-4 py-2 bg-gray-600 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-500"
+          className="inline-flex justify-center items-center w-full rounded-md pl-2 py-1 bg-gray-600 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-500"
         >
           {status === "dibuka" ? "dibuka" : "ditutup"}
           <svg
-            className="-mr-1 ml-2 h-5 w-5"
+            className=" mr-1 flex ml-1 h-3 w-3"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -44,7 +44,7 @@ const DropdownStatusLelang = ({ onStatusChange, currentStatus }) => {
 
       {dropdownOpen && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-25 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+          className="origin-top-right absolute right-0 mt-2 w-18 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="options-menu"
@@ -52,14 +52,14 @@ const DropdownStatusLelang = ({ onStatusChange, currentStatus }) => {
           <div className="py-1" role="none">
             <button
               onClick={() => handleStatusChange("dibuka")}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              className="block p-1 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
               role="menuitem"
             >
               Dibuka
             </button>
             <button
               onClick={() => handleStatusChange("ditutup")}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              className="block p-1 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
               role="menuitem"
             >
               Ditutup

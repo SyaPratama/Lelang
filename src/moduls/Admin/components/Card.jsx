@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Trash2, Pencil, Plus } from "lucide-react";
+import { Trash2, Pencil, Plus, History, Banknote } from "lucide-react"; // Tambahkan ikon History
 import DropdownStatusLelang from "./DropDownStatusLelang";
 import { https } from "../../../config/url";
 
@@ -39,33 +39,31 @@ const Card = ({
   };
 
   return (
-    <div>
-    <div className="group">
-  {/* Container Gambar */}
-  <div className="relative rounded-t-lg overflow-hidden group">
-    <div className="p-4 bg-white">
-      <div className="overflow-hidden rounded-md">
-        <img
-          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-          src={`${https}/file/${imageUrl}`}
-          alt={title}
-        />
+    <div className="bg-none   rounded-lg overflow-visible w-full max-w-sm mx-auto duration-300 group">
+      {/* Container Gambar */}
+      <div className="relative rounded-t-lg overflow-hidden group">
+        <div className="p-4 bg-white">
+          <div className="overflow-hidden rounded-md">
+            <img
+              className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+              src={`${https}/file/${imageUrl}`}
+              alt={title}
+            />
+          </div>
+        </div>
+        {!hideStatus && (
+          <span
+            className={`absolute top-2 left-2 px-3 py-1 text-xs font-semibold rounded-full text-white ${
+              status === "dibuka" ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            {status === "dibuka" ? "Dibuka" : "Ditutup"}
+          </span>
+        )}
       </div>
-    </div>
-    {!hideStatus && (
-      <span
-        className={`absolute top-2 left-2 px-3 py-1 text-xs font-semibold rounded-full text-white ${
-          status === "dibuka" ? "bg-green-500" : "bg-red-500"
-        }`}
-      >
-        {status === "dibuka" ? "Dibuka" : "Ditutup"}
-      </span>
-    )}
-  </div>
-
 
       {/* Content Section */}
-      <div className="p-4 pt-0 bg-white group h-[200px] flex flex-col justify-between">
+      <div className="p-4 pt-0 bg-white min-h-[220px] group flex flex-col justify-between">
         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
         <p className="text-sm text-gray-500">
           {date ? new Date(date).toLocaleDateString() : "Tanggal tidak tersedia"}
@@ -88,11 +86,13 @@ const Card = ({
         {/* High Bid Section */}
         {highestBid ? (
           <p className="text-sm text-gray-600">
-            Penawaran Tertinggi:{" "}
+            Penawaran Tertinggi: <br></br>
+            {highestBid.username}
+            {" "}
             <span className="font-semibold">
               Rp{highestBid.nominal.toLocaleString()}
             </span>{" "}
-            oleh {highestBid.username}
+            
           </p>
         ) : !hideHighBid && (
           <p className="text-sm italic text-gray-500">Belum ada penawaran</p>
@@ -137,13 +137,12 @@ const Card = ({
                     : "bg-orange-600 hover:bg-orange-700 focus:ring-orange-300"
                 }`}
               >
-                {hasBid ? "Edit Penawaran" : "Tawar Harga"}
+                {hasBid ? <><Pencil className="w-4 h-4 inline"/>Ubah Penawaran</> :  <><Banknote className="w-5 h-5 inline"/> Tawar Harga</>}
               </button>
               <button
                 onClick={onHistory}
-                className="flex-1 px-4 py-2 text-xs font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 transition duration-300 ease-in-out transform hover:scale-105"
-              >
-                Lihat Histori
+                className="flex-1 px-1 pl-0 py-1 text-xs font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 transition duration-300 ease-in-out transform hover:scale-105"
+              ><History className="w-4 h-4 inline" /> Histori
               </button>
             </div>
           ) : (
@@ -154,22 +153,21 @@ const Card = ({
               />
               <button
                 onClick={onBatal}
-                className="flex-1 px-4 py-2 text-xs font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 transition duration-300 ease-in-out transform hover:scale-105"
+                className="flex-1 px-1 pl-0 py-1 text-xs font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 transition duration-300 ease-in-out transform hover:scale-105"
               >
-                Batal Lelang
+                <Trash2 className="w-4 h-4 inline" /> Hapus
               </button>
               <button
                 onClick={onHistory}
-                className="flex-1 px-4 py-2 text-xs font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 transition duration-300 ease-in-out transform hover:scale-105"
-              >
-                Lihat Histori
+                className="flex-1 px-1 pl-0 py-1 text-xs font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 transition duration-300 ease-in-out transform hover:scale-105"
+              ><History className="w-4 h-4 inline" /> Histori
               </button>
             </div>
           )}
         </div>
       </div>
     </div>
-    </div>
+    
   );
 };
 
