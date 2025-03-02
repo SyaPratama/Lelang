@@ -40,7 +40,7 @@ const Card = ({
   };
 
   return (
-    <div className="bg-[#EAF0FC] flex flex-col rounded-lg overflow-visible w-full max-w-sm mx-auto duration-300 group">
+    <div className="bg-[#EAF0FC] border-2 border-transparent hover:border-[#4365D1] flex flex-col rounded-lg overflow-visible w-full max-w-sm mx-auto duration-300 group">
       {/* Container Gambar */}
       <div className="relative rounded-t-lg overflow-hidden group">
         <div className="p-4 pb-1 bg-white">
