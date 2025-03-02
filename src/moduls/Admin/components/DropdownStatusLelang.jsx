@@ -19,11 +19,11 @@ const DropdownStatusLelang = ({ onStatusChange, currentStatus }) => {
   };
 
   return (
-    <div className="relative inline-block text-left z-50">
+    <div className="relative inline-block text-left z-40">
       <div>
         <button
           onClick={toggleDropdown}
-          className="inline-flex justify-center items-center w-full rounded-md pl-2 py-1 bg-gray-600 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-500"
+          className="inline-flex justify-center h-[41px] items-center w-full rounded-md pl-2 py-1 bg-none border-2 border-[#005f8f]  text-sm font-medium text-[#005f8f] hover:text-white hover:bg-[#005f8f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-500"
         >
           {status === "dibuka" ? "dibuka" : "ditutup"}
           <svg
@@ -44,7 +44,7 @@ const DropdownStatusLelang = ({ onStatusChange, currentStatus }) => {
 
       {dropdownOpen && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-18 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+          className="origin-top-right absolute right-0 mt-2 w-18 rounded-md shadow-lg  bg-white ring-1 ring-[#005f8f] ring-opacity-5 focus:outline-none "
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="options-menu"
@@ -52,14 +52,14 @@ const DropdownStatusLelang = ({ onStatusChange, currentStatus }) => {
           <div className="py-1" role="none">
             <button
               onClick={() => handleStatusChange("dibuka")}
-              className="block p-1 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              className="block p-1 w-full text-sm text-[#005f8f] hover:bg-gray-100 hover:text-gray-900"
               role="menuitem"
             >
               Dibuka
             </button>
             <button
               onClick={() => handleStatusChange("ditutup")}
-              className="block p-1 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              className="block p-1 w-full text-sm text-[#005f8f] hover:bg-gray-100 hover:text-gray-900"
               role="menuitem"
             >
               Ditutup

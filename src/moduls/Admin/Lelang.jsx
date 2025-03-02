@@ -7,13 +7,14 @@ import DateRangeFilter from './components/DateRangeFilter'; // Import DateRangeF
 import PriceRangeFilter from './components/PriceRangeFilter'; // Import PriceRangeFilter component
 import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
 import Swal from 'sweetalert2';
+import { useAuth } from '../../Auth/AuthContext';
 
 const Lelang = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
+  const { name } = useAuth();
   const [selectedHistory, setSelectedHistory] = useState([]);
   const { dataLelang, handleGetLelang, handleDeleteLelang, handleUpdateLelangStatus, penawaran, handleGetPenawaran, handleGetHighestBid } = useLelang();
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
-  const [filterColumn, setFilterColumn] = useState("semuanya"); // State for selected filter column
   const [statusFilter, setStatusFilter] = useState("semua"); // State for status filter
   const [sortOption, setSortOption] = useState(""); // State for sort option
   const [startDate, setStartDate] = useState(""); // State for start date
@@ -141,37 +142,38 @@ const Lelang = () => {
   return (
     <>
 <section className="">
-        <div className=" pb-[25px]">
+        <div className="">
 
-        <Header title="Lelang" />
+        <Header title="Lelang" name={name} />
+        <div className="grid gap-2 w-full bg-white p-5 my-2 shadow-sm rounded-sm ">
         <div className="grid grid-cols-12 gap-2 w-full pt-2">
           <div className="order-1 md:order-2 col-span-12 sm:col-span-9 md:col-span-9 lg:col-span-4 xl:col-span-4">
             <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
           </div>
 
-          <div className="order-2 col-span-12 sm:col-span-3 md:col-span-3 lg:col-span-2">
+          <div className="order-2 col-span-6 sm:col-span-3 md:col-span-3 lg:col-span-2">
           <select
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg"
+            className="w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC]"
             value={statusFilter}
           >
-            <option value="semua">Status</option>
-            <option value="dibuka">Buka</option>
-            <option value="ditutup">Tutup</option>
+            <option className='bg-white text-gray-600' value="semua">Status</option>
+            <option className='bg-white text-gray-600' value="dibuka">Buka</option>
+            <option className='bg-white text-gray-600' value="ditutup">Tutup</option>
           </select>
           </div>
 
-          <div className="order-3 col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
+          <div className="order-3 col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3">
           <select
             onChange={(e) => setSortOption(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg"
+            className="w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC]"
             value={sortOption}
           >
-            <option value="">Urutkan Harga</option>
-            <option value="harga_awal_tertinggi">Harga Tertinggi</option>
-            <option value="harga_awal_terendah">Harga Terendah</option>
-            <option value="penawaran_tertinggi">Penawaran Tertinggi</option>
-            <option value="penawaran_terendah">Penawaran Terendah</option>
+            <option className='bg-white text-gray-600' value="">Urutkan Harga</option>
+            <option className='bg-white text-gray-600' value="harga_awal_tertinggi">Harga Tertinggi</option>
+            <option className='bg-white text-gray-600' value="harga_awal_terendah">Harga Terendah</option>
+            <option className='bg-white text-gray-600' value="penawaran_tertinggi">Penawaran Tertinggi</option>
+            <option className='bg-white text-gray-600' value="penawaran_terendah">Penawaran Terendah</option>
           </select>
           </div>
              
@@ -190,6 +192,7 @@ const Lelang = () => {
           </button>
           </div>
           </div>
+        </div>
         </div>
 
       {showDateRangePopup && (
@@ -212,7 +215,7 @@ const Lelang = () => {
         />
       )}
 
-      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-2 h-[100vh] pb-[200px] scrollable-content ">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-2 h-[100vh] pb-[350px] scrollable-content pt-2">
         {Array.isArray(sortedLelang) && sortedLelang.map((lelang) => (
           <Card
             key={lelang.id_lelang}

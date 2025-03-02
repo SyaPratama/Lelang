@@ -8,6 +8,8 @@
     --breakpoint-xs: 800px;
 }
 
+
+
 body{
   overflow-y: hidden;
 }
@@ -26,15 +28,20 @@ body{
 
 
 .bg-blue-main{
-    background-color: #005f8f;
+    background-color: #4365D1;
 }
 
 .bg-blue-dark{
-    background-color: #00476d;
+    background-color: #718ADE;
 }
 
+.bg-gray-main{
+  background-color: #F4F4F4;
+}
+
+
 .hover-side:hover{
-    background-color: #00476d;
+    background-color: #4365D1;
 }
 
 .color-font-dark{
@@ -43,7 +50,7 @@ body{
 
 .title-text{
     font-family: Arial;
-    font-size: 48px;
+    font-size: 34px;
     font-weight: bold;
     color: #07273A;
 }

@@ -1,16 +1,30 @@
 import Logout from "./Logout";
+  
+
 
 const Header = ({ title, name }) => {
+  const handleLogout = () => {
+    // Fungsi ini akan memanggil komponen Logout
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+      logoutButton.click();
+    }
+  }
   return (
-    <div className="grid grid-cols-12 gap-2 w-full">
-      <div className="col-span-9">
-        <h1 className="text-3xl title-text text-gray-600 font-semibold">
+    <div className="grid grid-cols-12 gap-2 w-full pt-4 pb-2">
+      <div className="col-span-7 sm:col-span-9">
+        <h1 className=" title-text text-gray-600 font-semibold">
           {title}
         </h1>
       </div>
-      <div className="order-2 col-span-3 lg:order-2 flex justify-end items-center">
-        <p className="text-sm text-gray-900 mr-4">{name}</p>
-        <Logout />
+      <div className="order-2 col-span-5 sm:col-span-3 lg:order-2 flex justify-end items-center">
+        <div
+          className="flex text-center align-middle items-center bg-white p-2 py-1 rounded-3xl shadow-sm hover:bg-gray-200 cursor-pointer"
+          onClick={handleLogout}
+        >
+          <p className="text-xl text-gray-900 pr-2">{name}</p>
+          <Logout />
+        </div>
       </div>
     </div>
   );

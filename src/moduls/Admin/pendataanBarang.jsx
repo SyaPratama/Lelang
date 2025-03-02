@@ -8,9 +8,11 @@ import FormPendataan from "./components/FormPendataan";
 import DateRangeFilter from './components/DateRangeFilter'; // Import DateRangeFilter component
 import PriceRangeFilter from './components/PriceRangeFilter'; // Import PriceRangeFilter component
 import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
+import { useAuth } from "../../Auth/AuthContext";
 
 function PendataanBarang() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { name} = useAuth();
   const [selectedItem, setSelectedItem] = useState(null); // Tambahkan state untuk item yang dipilih
   const { barang, dataLelang, handleGetBarang, handleGetLelang, handleEditBarang, handleDeleteBarang, handleAddLelang } = useLelang();
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
@@ -130,11 +132,11 @@ function PendataanBarang() {
   return (
     <>
       <section className="">
-        <div className="pb-[30px]">
+        <div className="">
 
       
-        <Header title="Barang" />
-        <div className="grid grid-cols-12 gap-2 w-full pt-2">
+        <Header title="Barang" name={name} />
+        <div className="grid grid-cols-12 gap-2 w-full bg-white p-5 my-2 shadow-sm rounded-sm ">
         <div className="order-2 md:order-1 col-span-4 sm:col-span-3 md:col-span-2 lg:col-span-2 flex justify-start items-start xl:col-span-2">
             <button onClick={handleModalOpen} className="bg-blue-main w-full text-amber-50 py-2 px-2 rounded-lg">
               Tambah
@@ -144,27 +146,27 @@ function PendataanBarang() {
             <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
           </div>
           
-          <div className="order-5 col-span-12 md:col-span-3 lg:col-span-2">
+          <div className="order-5  col-span-12 md:col-span-3 lg:col-span-2">
             <select
               onChange={(e) => setSortOption(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
+              className="w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC] rounded-lg"
               value={sortOption}
             >
-              <option value="">Urutkan Harga</option>
-              <option value="harga_awal_tertinggi">Harga Tertinggi</option>
-              <option value="harga_awal_terendah">Harga Terendah</option>
+              <option className="bg-white text-gray-600" value="">Urutkan Harga</option>
+              <option className="bg-white text-gray-600" value="harga_awal_tertinggi">Harga Tertinggi</option>
+              <option className="bg-white text-gray-600" value="harga_awal_terendah">Harga Terendah</option>
             </select>
           </div>
              
           <div className="order-6 col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-3 flex justify-start items-start gap-2">
             <button
-              className="bg-blue-main w-full text-white p-2 px-1 rounded-lg"
+              className="bg-blue-main border-1 text-white border-gray-300 w-full shadow-sm p-2 px-1 rounded-lg"
               onClick={() => setShowPriceRangePopup(true)}
             >
               Filter Harga
             </button>
             <button
-              className="bg-blue-main w-full text-white p-2 px-1 rounded-lg"
+              className="bg-blue-main text-white border-1 border-gray-300 w-full shadow-sm p-2 px-1 rounded-lg"
               onClick={() => setShowDateRangePopup(true)}
             >
               Filter Tanggal
@@ -193,7 +195,7 @@ function PendataanBarang() {
         )}
 
 
-        <section className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-2 h-[100vh] pb-[200px] scrollable-content">
+        <section className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-2 h-[100vh] pb-[350px] scrollable-content pt-2">
         {Array.isArray(sortedBarang) && sortedBarang.map((item) => (
           <Card
             key={item.id_barang}

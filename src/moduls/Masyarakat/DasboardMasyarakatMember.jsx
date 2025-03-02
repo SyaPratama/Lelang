@@ -141,21 +141,9 @@ const MainLayoutsMasyarakatMember = () => {
           <button className="bg-blue-dark text-blue-main p-2 rounded-lg shadow-md">Hubungi</button>
         </div>
 
-        <div className="flex justify-between mt-4">
-          <button
-            className=" text-dark-100 p-2 bg-[#ffffff] shadow-2xl  rounded-lg"
-            onClick={() => setShowDateRangePopup(true)}
-          >
-            Filter Tanggal
-          </button>
-          <button
-            className=" text-dark-100 p-2 bg-[#ffffff] shadow-2xl rounded-lg"
-            onClick={() => setShowPriceRangePopup(true)}
-          >
-            Filter Harga
-          </button>
-          <select
-            className=" text-dark-100 p-2 bg-[#ffffff] shadow-2xl rounded-lg"
+        <div className="grid grid-cols-12 mt-4 gap-1">
+        <select
+            className="col-span-12 sm:col-span-4 border-0 text-dark-100 p-2 bg-[#ffffff] shadow-sm rounded-lg"
             onChange={(e) => setStatusFilter(e.target.value)}
             value={statusFilter}
           >
@@ -163,6 +151,19 @@ const MainLayoutsMasyarakatMember = () => {
             <option value="dibuka">Buka</option>
             <option value="ditutup">Tutup</option>
           </select>
+          <button
+            className="col-span-6 sm:col-span-4 text-dark-100 p-2 bg-[#ffffff] shadow-2xl  rounded-lg"
+            onClick={() => setShowDateRangePopup(true)}
+          >
+            Filter Tanggal
+          </button>
+          <button
+            className="col-span-6 sm:col-span-4 text-dark-100 p-2 bg-[#ffffff] shadow-2xl rounded-lg"
+            onClick={() => setShowPriceRangePopup(true)}
+          >
+            Filter Harga
+          </button>
+          
         </div>
 
         {showDateRangePopup && (

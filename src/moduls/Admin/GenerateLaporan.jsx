@@ -17,7 +17,7 @@ function GenerateLaporan() {
   const printRef = useRef();
   const [showButton, setShowButton] = useState(true);
   const [reportData, setReportData] = useState([]);
-  const { token } = useAuth(); // Get the token from useAuth
+  const { token, name } = useAuth(); // Get the token from useAuth
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [filterColumn, setFilterColumn] = useState("semuanya"); // State for selected filter column
   const [startDate, setStartDate] = useState(""); // State for start date
@@ -131,39 +131,40 @@ function GenerateLaporan() {
   return (
     <>
     <section className="">
-        <div className=" pb-[25px]">
-
-        <Header title="Laporan" />
+        <div className="">
+        
+        <Header title="Laporan" name={name} />
+        <div className="grid gap-2 w-full bg-white p-5 my-2 shadow-sm rounded-sm ">
         <div className="grid grid-cols-12 gap-2 w-full pt-2">
-          <div className="order-1 md:order-2 col-span-12 sm:col-span-7 md:col-span-8 lg:col-span-5 xl:col-span-5">
+          <div className="order-1 md:order-2 col-span-12 sm:col-span-7 md:col-span-6 lg:col-span-5 xl:col-span-5">
             <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
           </div>
           
-          <div className="order-3 col-span-12 sm:col-span-3 md:col-span-3 lg:col-span-2">
+          <div className="order-3 col-span-12 sm:col-span-3 md:col-span-2 lg:col-span-2">
           <select
             onChange={(e) => setFilterColumn(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg"
+            className="w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC]"
             value={filterColumn}
           >
-            <option value="semuanya">Semuanya</option>
-            <option value="nama_lengkap">Username</option>
-            <option value="tanggal">Tanggal</option>
-            <option value="nama_barang">Nama Barang</option>
-            <option value="harga_awal">Harga Awal</option>
-            <option value="nominal">Nominal</option>
-            <option value="telp">Telepon</option>
+            <option className="bg-white text-gray-600" value="semuanya">Semuanya</option>
+            <option  className="bg-white text-gray-600" value="nama_lengkap">Username</option>
+            <option className="bg-white text-gray-600" value="tanggal">Tanggal</option>
+            <option className="bg-white text-gray-600" value="nama_barang">Nama Barang</option>
+            <option className="bg-white text-gray-600" value="harga_awal">Harga Awal</option>
+            <option className="bg-white text-gray-600" value="nominal">Nominal</option>
+            <option className="bg-white text-gray-600" value="telp">Telepon</option>
           </select>
           </div>
              
-          <div className="order-4 col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-5 flex justify-start items-start gap-2">
+          <div className="order-4 col-span-12 sm:col-span-6 md:col-span-4 2xl:col-span-3 flex justify-start items-start gap-2">
           <button
-            className="bg-blue-main text-white p-2 col-span-6 w-full rounded-lg"
+            className="bg-blue-main text-white p-2 col-span-5 w-full rounded-lg"
             onClick={() => setShowDateRangePopup(true)}
           >
             Filter Tanggal
           </button>
           <button
-            className="bg-blue-main text-white col-span-6 p-2 w-full rounded-lg"
+            className="bg-blue-main text-white col-span-5 p-2 w-full rounded-lg"
             onClick={() => setShowPriceRangePopup(true)}
           >
             Filter Harga
@@ -171,7 +172,7 @@ function GenerateLaporan() {
           </div>
           </div>
         </div>
-
+</div>
       
       
 
@@ -196,17 +197,20 @@ function GenerateLaporan() {
         />
       )}
 
-<div className="h-[100vh] pb-[200px] scrollable-content ">
-<TableGenerate
+<div className="scrollable-content pt-2">
+  <div className="">
+  <TableGenerate
         handleCetakClick={handleCetakClick}
         reportData={filteredReportData}
         handleDeleteReport={handleDeleteReport}
       />
+  </div>
+
 </div>
       
 
      
-      </section>
+      </section> 
 
       <StrukModalGenerate
         isModalOpen={isModalOpen}

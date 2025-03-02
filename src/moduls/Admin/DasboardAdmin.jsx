@@ -70,96 +70,103 @@ const DasboardAdmin = () => {
     { name: 'Lelang Tutup', value: lelangClosedCount },
   ];
 
-  const COLORS = ['#0088FE', '#FF8042'];
+  const COLORS = ['#82ECAC', '#FD9292'];
 
   return (
     <>
-    
       <Header title="Dashboard" name={name} />
-      <section className="scrollable-content ">
-      <div className="py-8 pb-[100px]">
-        
-        <div className="relative bg-cover bg-center h-64 mb-8 rounded-lg overflow-hidden shadow-lg">
-          <div className="absolute inset-0 bg-black opacity-50"></div>
-          <div className="relative z-10 flex flex-col items-start justify-center h-full text-white p-5">
-            <h1 className="text-4xl font-bold">Selamat Datang, {name}!</h1>
-            <p className="text-xl mt-2">Pantau aktivitas lelang dan data penting lainnya di sini</p>
+      <section className="scrollable-content">
+        <div className="py-8 pt-5 pb-[150px]">
+          <div className="relative bg-cover bg-center h-50 mb-8 rounded-lg overflow-hidden shadow-lg">
+            <div className="absolute inset-0 bg-black opacity-50"></div>
+            <div className="relative z-10 flex flex-col items-start justify-center h-full text-white p-5">
+              <h1 className="text-[34px] font-bold">Selamat Datang, {name}!</h1>
+              <p className="text-xl mt-2">Pantau aktivitas lelang dan data penting lainnya di sini</p>
+            </div>
           </div>
-        </div>
 
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 ">
-          {/* Left Side: Cards */}
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white shadow-md rounded-lg p-6 flex items-center">
-              <FaUsers className="text-4xl text-blue-500 mr-4" />
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700">Total Users</h3>
-                <p className="text-3xl text-blue-500">{userCount}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+            {/* Left Side: Cards */}
+            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-2 order-2 sm:order-1">
+              <div className="bg-white shadow-sm rounded-lg p-6 flex items-center">
+                <FaUsers className="text-4xl text-[#4365D1] mr-4" />
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-700">Total Users</h3>
+                  <p className="text-3xl text-[#4365D1]">{userCount}</p>
+                </div>
+              </div>
+              <div className="bg-white shadow-sm rounded-lg p-6 flex items-center">
+                <FaUserShield className="text-4xl text-[#4365D1] mr-4" />
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-700">Total Admins</h3>
+                  <p className="text-3xl text-[#4365D1]">{adminCount}</p>
+                </div>
+              </div>
+              <div className="bg-white shadow-sm rounded-lg p-6 flex items-center">
+                <FaBoxOpen className="text-4xl text-[#4365D1] mr-4" />
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-700">Total Barang</h3>
+                  <p className="text-3xl text-[#4365D1]">{barangCount}</p>
+                </div>
+              </div>
+              <div className="bg-white shadow-sm rounded-lg p-6 flex items-center">
+                <FaGavel className="text-4xl text-[#4365D1] mr-4" />
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-700">Total Lelang</h3>
+                  <p className="text-3xl text-[#4365D1]">{lelangCount}</p>
+                </div>
+              </div>
+              <div className="bg-white shadow-sm rounded-lg p-6 flex items-center">
+                <FaCheck className="text-4xl text-[#4365D1] mr-4" />
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-700">Total Lelang (Buka)</h3>
+                  <p className="text-3xl text-[#4365D1]">{lelangOpenCount}</p>
+                </div>
+              </div>
+              <div className="bg-white shadow-sm rounded-lg p-6 flex items-center">
+                <FaTimes className="text-4xl text-[#4365D1] mr-4" />
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-700">Total Lelang (Tutup)</h3>
+                  <p className="text-3xl text-[#4365D1]">{lelangClosedCount}</p>
+                </div>
               </div>
             </div>
-            <div className="bg-white shadow-md rounded-lg p-6 flex items-center">
-              <FaUserShield className="text-4xl text-blue-500 mr-4" />
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700">Total Admins</h3>
-                <p className="text-3xl text-blue-500">{adminCount}</p>
+            {/* Right Side: Pie Chart */}
+            <div className="bg-white shadow-sm h-85 sm:h-full rounded-lg p-6 order-1 sm:order-2">
+              <h3 className="text-xl font-semibold text-gray-700">Status Lelang</h3>
+              <div className="flex flex-col mb-4">
+                <div className="flex items-center">
+                <span className="inline-block w-4 h-4 rounded-full bg-[#82ECAC] mr-2"></span>
+                <p className="mr-4">Buka</p>
+                </div>
+                <div className="flex items-center">
+                <span className="inline-block w-4 h-4 rounded-full bg-[#FD9292] mr-2"></span>
+                
+                <p>Tutup</p>
+                </div>
               </div>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={100}
+                    fill="#4365D1"
+                    dataKey="value"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
-            <div className="bg-white shadow-md rounded-lg p-6 flex items-center">
-              <FaBoxOpen className="text-4xl text-blue-500 mr-4" />
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700">Total Barang</h3>
-                <p className="text-3xl text-blue-500">{barangCount}</p>
-              </div>
-            </div>
-            <div className="bg-white shadow-md rounded-lg p-6 flex items-center">
-              <FaGavel className="text-4xl text-blue-500 mr-4" />
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700">Total Lelang</h3>
-                <p className="text-3xl text-blue-500">{lelangCount}</p>
-              </div>
-            </div>
-            <div className="bg-white shadow-md rounded-lg p-6 flex items-center">
-              <FaCheck className="text-4xl text-blue-500 mr-4" />
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700">Total Lelang (Buka)</h3>
-                <p className="text-3xl text-blue-500">{lelangOpenCount}</p>
-              </div>
-            </div>
-            <div className="bg-white shadow-md rounded-lg p-6 flex items-center">
-              <FaTimes className="text-4xl text-blue-500 mr-4" />
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700">Total Lelang (Tutup)</h3>
-                <p className="text-3xl text-blue-500">{lelangClosedCount}</p>
-              </div>
-            </div>
-          </div>
-          {/* Right Side: Pie Chart */}
-          <div className="bg-white shadow-md rounded-lg p-6 ">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">Status Lelang</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
           </div>
         </div>
-      </div>
       </section>
-     
     </>
   );
 };
