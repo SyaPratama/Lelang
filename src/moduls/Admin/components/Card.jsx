@@ -71,7 +71,7 @@ const Card = ({
         <div>
         <h3 className="text-lg font-semibold text-[#4365D1]">{title}</h3>
         <p className="text-sm text-gray-500">
-          {date ? new Date(date).toLocaleDateString() : "Tanggal tidak tersedia"}
+          {date ? new Date(date).toLocaleString() : "Tanggal tidak tersedia"}
         </p>
         {/* Description with Expandable Logic */}
         <p className="text-gray-700 text-sm break-words">

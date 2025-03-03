@@ -52,7 +52,6 @@ export const handleRegister = async (userData) => {
 
 export const getUser = async (token) => {
   try {
-    console.log("Token yang digunakan:", token); // Debugging
 
     const response = await axios.get(https + '/user', {
       headers: {
@@ -132,7 +131,6 @@ export const getLelang = async (token) => {
     }
   })
   .then((response) => {
-    console.log("API Response:", response);
     return response;
   })
   .catch((error) => {
@@ -192,7 +190,6 @@ export const updateLelangStatus = async (data, token) => {
 export const getPenawaran = async () => {
   return axios.get(https + '/penawaran')
   .then((response) => {
-    console.log("API Response:", response);
     return response;
   })
   .catch((error) => {
@@ -257,7 +254,6 @@ export const getHighestBid = async (id_penawaran, token) => {
     },
   })
   .then((response) => {
-    console.log("Highest Bid Response:", response);
     return response;
   })
   .catch((error) => {
@@ -289,7 +285,6 @@ export const getHistory = async (token) => {
         'Authorization': 'Bearer ' + token,
       }
     });
-    console.log("getHistory response:", response); // Debugging line
     return response;
   } catch (error) {
     console.error("Failed to fetch history:", error);

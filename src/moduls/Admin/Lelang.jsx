@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import SearchBar from "./components/Search";
 import Header from "./components/Header";
@@ -29,7 +30,6 @@ const Lelang = () => {
     handleGetPenawaran();
   }, []);
 
-  console.log("Data Lelang di Komponen:", dataLelang);
 
   const handleUpdateStatus = async (id_lelang, id_barang, status) => {
     await handleUpdateLelangStatus({ id_lelang, id_barang, status });
@@ -76,7 +76,6 @@ const Lelang = () => {
 
   const addHighestBidToReport = async (id_penawaran) => {
     const highestBid = await handleGetHighestBid(id_penawaran);
-    console.log("Highest Bid Response: ", highestBid); // Tambahkan log ini untuk debugging
     if (highestBid && highestBid.dataPenawaran && highestBid.dataPenawaran.length > 0) {
       const reportData = JSON.parse(localStorage.getItem('reportData')) || [];
       reportData.push(highestBid.dataPenawaran[0]);

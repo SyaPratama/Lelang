@@ -12,7 +12,12 @@ const FormPendataan = ({ handleClose, selectedItem }) => {
   useEffect(() => {
     if (selectedItem) {
       setNamaBarang(selectedItem.nama_barang);
-      setTanggal(selectedItem.tanggal.split("T")[0]); // Format tanggal
+      const date = new Date(selectedItem.tanggal);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const validDate = `${year}-${month}-${day}`;
+      setTanggal(validDate); // Format tanggal
       setHargaPenawaran(selectedItem.harga_awal);
       setDeskripsi(selectedItem.deskripsi_barang);
     }
@@ -42,10 +47,15 @@ const FormPendataan = ({ handleClose, selectedItem }) => {
   return (
     <>
       <div className="mx-auto">
-        <h2 className="text-center text-2xl font-bold mb-4">{selectedItem ? "Edit Barang" : "Tambah Barang"}</h2>
+        <h2 className="text-center text-2xl font-bold mb-4">
+          {selectedItem ? "Edit Barang" : "Tambah Barang"}
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gambar">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="gambar"
+            >
               Gambar
             </label>
             <div className="relative">
@@ -59,7 +69,10 @@ const FormPendataan = ({ handleClose, selectedItem }) => {
             </div>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="namaBarang">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="namaBarang"
+            >
               Nama Barang
             </label>
             <input
@@ -72,7 +85,10 @@ const FormPendataan = ({ handleClose, selectedItem }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tanggal">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="tanggal"
+            >
               Tanggal
             </label>
             <input
@@ -84,7 +100,10 @@ const FormPendataan = ({ handleClose, selectedItem }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hargaPenawaran">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="hargaPenawaran"
+            >
               Harga Penawaran
             </label>
             <input
@@ -97,7 +116,10 @@ const FormPendataan = ({ handleClose, selectedItem }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="deskripsi">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="deskripsi"
+            >
               Deskripsi
             </label>
             <textarea
