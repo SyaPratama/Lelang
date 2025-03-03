@@ -14,7 +14,7 @@ const DasboardMasyarakat = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState([]);
   const { isLoggedin } = useAuth(); // Mengambil status login
-  const { dataLelang, handleFetch, handleGetLelang, handleGetPenawaran, penawaran } = useLelang();
+  const { dataLelang, handleGetLelang, handleGetPenawaran, penawaran } = useLelang();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [startDate, setStartDate] = useState(""); // State for start date
@@ -25,12 +25,10 @@ const DasboardMasyarakat = () => {
   const [showDateRangePopup, setShowDateRangePopup] = useState(false); // State for showing date range popup
   const [showPriceRangePopup, setShowPriceRangePopup] = useState(false); // State for showing price range popup
 
-  
   useEffect(() => {
-    console.info(handleFetch);  
     handleGetLelang();
     handleGetPenawaran();
-  }, [handleFetch]);
+  }, []);
 
   const handleHistory = (idLelang) => {
     const historyData = penawaran.filter(p => p.id_lelang === idLelang);
@@ -104,7 +102,7 @@ const DasboardMasyarakat = () => {
         </div>
     </div>
 
-    <div className='flex flex-col relative'>
+ 
 
 
     
@@ -200,8 +198,7 @@ const DasboardMasyarakat = () => {
         )}
         
       </section>
-         
-      </div>
+   
     </>
   );
 };
