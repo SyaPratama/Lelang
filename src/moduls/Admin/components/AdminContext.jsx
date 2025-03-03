@@ -41,8 +41,6 @@ const LelangProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
   const [handleFetch, setHandleFetch] = useState(false);
 
-  console.log("Data Lelang:", dataLelang);
-
   const handleGetHighestBid = async (id_penawaran) => {
     try {
       const response = await getHighestBid(id_penawaran, token);
@@ -160,7 +158,7 @@ const LelangProvider = ({ children }) => {
   const handleEditBarang = async (id_barang, barang) => {
     try {
       const response = await editBarang(id_barang, barang, token);
-      if (response.status === 201) {
+      if (response.status === 200) {
         handleGetBarang();
         setHandleFetch(true);
       }

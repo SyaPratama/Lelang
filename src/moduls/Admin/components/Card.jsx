@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Trash2, Pencil, History, Banknote, Gavel, XCircle } from "lucide-react"; // Tambahkan ikon XCircle
-import DropdownStatusLelang from "./DropDownStatusLelang";
-import { https } from "../../../config/url";
+import { Trash2, Pencil, History, Banknote, Gavel } from "lucide-react"; // Tambahkan ikon History
+import DropdownStatusLelang from "./DropdownStatusLelang.jsx";
+import { https } from "../../../config/url.js";
+
 
 const Card = ({
   onDelete,
@@ -79,7 +80,7 @@ const Card = ({
         <div>
         <h3 className="text-lg font-semibold text-[#718ADE]">{title}</h3>
         <p className="text-sm text-gray-500">
-          {date ? new Date(date).toLocaleDateString() : "Tanggal tidak tersedia"}
+          {date ? new Date(date).toLocaleString() : "Tanggal tidak tersedia"}
         </p>
         {/* Description with Expandable Logic */}
         <p className="text-gray-700 text-sm break-words">

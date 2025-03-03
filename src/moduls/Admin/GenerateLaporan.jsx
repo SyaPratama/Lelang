@@ -32,7 +32,6 @@ function GenerateLaporan() {
     const fetchHistory = async () => {
       try {
         const response = await getHistory(token); // Pass the token to getHistory
-        console.log("History response:", response); // Debugging line
         if (response.status === 201 && response.data.status === "success") {
           const { data } = response.data;
           setReportData(data.history);
