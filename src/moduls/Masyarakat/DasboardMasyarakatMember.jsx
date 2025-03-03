@@ -8,9 +8,10 @@ import { useAuth } from '../../Auth/AuthContext';
 import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
 import DateRangeFilter from '../Admin/components/DateRangeFilter'; // Import DateRangeFilter component
 import PriceRangeFilter from '../Admin/components/PriceRangeFilter'; // Import PriceRangeFilter component
+import { Calendar, Banknote } from 'lucide-react'; // Import icons from lucide-react
 
 const MainLayoutsMasyarakatMember = () => {
-  const { name,  isLoggedin } = useAuth();
+  const { name, isLoggedin } = useAuth();
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState([]);
   const [showBidPopup, setShowBidPopup] = useState(false);
@@ -28,6 +29,7 @@ const MainLayoutsMasyarakatMember = () => {
   const [statusFilter, setStatusFilter] = useState("semua"); // State for status filter
   const [showDateRangePopup, setShowDateRangePopup] = useState(false); // State for showing date range popup
   const [showPriceRangePopup, setShowPriceRangePopup] = useState(false); // State for showing price range popup
+  const [bidFilter, setBidFilter] = useState("semua"); // State for bid filter
 
   useEffect(() => {
     handleGetLelang();
@@ -99,7 +101,7 @@ const MainLayoutsMasyarakatMember = () => {
     return penawaran.find(p => p.id_lelang === idLelang && p.username === name);
   };
 
-  // Filter lelang data based on search query, date range, price range, and status filter
+  // Filter lelang data based on search query, date range, price range, status filter, and bid filter
   const filteredLelang = dataLelang.filter(lelang => {
     const matchesSearchQuery = lelang.nama_barang.toLowerCase().includes(searchQuery.toLowerCase()) ||
       lelang.deskripsi_barang.toLowerCase().includes(searchQuery.toLowerCase());
@@ -114,28 +116,27 @@ const MainLayoutsMasyarakatMember = () => {
 
     const matchesStatusFilter = statusFilter === "semua" || lelang.status === statusFilter;
 
-    return matchesSearchQuery && matchesDateRange && matchesPriceRange && matchesStatusFilter;
+    const matchesBidFilter = bidFilter === "semua" || (bidFilter === "sudah" && hasUserBid(lelang.id_lelang)) || (bidFilter === "belum" && !hasUserBid(lelang.id_lelang));
+
+    return matchesSearchQuery && matchesDateRange && matchesPriceRange && matchesStatusFilter && matchesBidFilter;
   });
 
   return (
     <>
-     <div className="flex fixed w-full bg-white">
-          <div className="grid grid-cols-12 w-full gap-1  p-2 items-center max-w-[900px] mx-auto">
-            <div className='col-span-8 sm:col-span-10'>
-              <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
-            </div>
-            <div className='col-span-4 sm:col-span-2'>
-              <HeaderMasyarakat name={name} />
-            </div>
+      <div className="flex fixed w-full bg-white">
+        <div className="grid grid-cols-12 w-full gap-1  p-2 items-center max-w-[900px] mx-auto">
+          <div className='col-span-8 sm:col-span-10'>
+            <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
+          </div>
+          <div className='col-span-4 sm:col-span-2'>
+            <HeaderMasyarakat name={name} />
           </div>
         </div>
+      </div>
 
       <section className="pt-16 max-w-[900px] mx-auto">
-       
-
-        
         <div className="grid grid-cols-12 mt-2 gap-1 bg-white p-5">
-        <select
+          <select
             className="col-span-12 sm:col-span-4 border-0 text-dark-100 w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC] rounded-lg"
             onChange={(e) => setStatusFilter(e.target.value)}
             value={statusFilter}
@@ -144,19 +145,27 @@ const MainLayoutsMasyarakatMember = () => {
             <option value="dibuka">Buka</option>
             <option value="ditutup">Tutup</option>
           </select>
+          <select
+            className="col-span-12 sm:col-span-4 border-0 text-dark-100 w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC] rounded-lg"
+            onChange={(e) => setBidFilter(e.target.value)}
+            value={bidFilter}
+          >
+            <option value="semua">Semua Penawaran</option>
+            <option value="sudah">Sudah Menawar</option>
+            <option value="belum">Belum Menawar</option>
+          </select>
           <button
-            className="col-span-6 sm:col-span-4 text-white p-2 bg-[#4365D1] shadow-2xl  rounded-lg"
+            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
             onClick={() => setShowDateRangePopup(true)}
           >
-            Filter Tanggal
+            <Calendar className="w-5 h-5 mr-2" /> Tanggal
           </button>
           <button
-            className="col-span-6 sm:col-span-4 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg"
+            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
             onClick={() => setShowPriceRangePopup(true)}
           >
-            Filter Harga
+            <Banknote className="w-5 h-5 mr-2" /> Harga
           </button>
-          
         </div>
 
         {showDateRangePopup && (
@@ -182,50 +191,41 @@ const MainLayoutsMasyarakatMember = () => {
         {Array.isArray(filteredLelang) && filteredLelang.length === 0 ? (
           <p className="text-center">Tidak ada data lelang tersedia.</p>
         ) : (
+          <div className='scrollable-content h-[100vh] pb-[250px] mt-2'>
+            <div className="bg-[#6E82B9] text-white p-4 mx-2 flex justify-between items-center mb-2 rounded-lg shadow-md ">
+              <div className="flex items-center">
+                <div>
+                  <h1 className="text-xl font-bold">Hallo, Selamat Datang!</h1>
+                  <p>Mau lelang? hubungi kami sekarang</p>
+                </div>
+              </div>
+              <button className="bg-[#EBF2FC] text-[#4365D1] p-2 rounded-lg shadow-md">Hubungi</button>
+            </div>
 
-          <div className=' scrollable-content h-[100vh] pb-[250px] mt-2'>
-          
-           
-          <div className="bg-[#6E82B9] text-white p-4 mx-2 flex justify-between items-center mb-2 rounded-lg shadow-md ">
-          <div className="flex items-center">
-            <div>
-              <h1 className="text-xl font-bold">Hallo, Selamat Datang!</h1>
-              <p>Mau lelang? hubungi kami sekarang</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+              {filteredLelang.map((lelang) => {
+                const userBid = getUserBid(lelang.id_lelang);
+                return (
+                  <Card
+                    key={lelang.id_lelang}
+                    isMasyarakatPage={true}
+                    onHistory={() => handleHistory(lelang.id_lelang)}
+                    onTawar={() => handleBid(lelang.id_lelang, lelang.status)}
+                    onEditBid={() => handleEditBid(lelang.id_lelang, lelang.status, userBid?.id_penawaran, userBid?.nominal)}
+                    isLoggedin={isLoggedin}
+                    title={lelang.nama_barang}
+                    description={lelang.deskripsi_barang}
+                    date={lelang.tanggal}
+                    price={lelang.harga_awal}
+                    imageUrl={lelang.foto}
+                    status={lelang.status}
+                    highestBid={getHighestBid(lelang.id_lelang)}
+                    hasBid={hasUserBid(lelang.id_lelang)}
+                  />
+                );
+              })}
             </div>
           </div>
-          <button className="bg-[#EBF2FC] text-[#4365D1]  p-2 rounded-lg shadow-md">Hubungi</button>
-        </div>
-        
-        
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 ">
-
-            
-            {filteredLelang.map((lelang) => {
-              const userBid = getUserBid(lelang.id_lelang);
-              return (
-                <Card
-                  key={lelang.id_lelang}
-                  isMasyarakatPage={true}
-                  onHistory={() => handleHistory(lelang.id_lelang)}
-                  onTawar={() => handleBid(lelang.id_lelang, lelang.status)}
-                  onEditBid={() => handleEditBid(lelang.id_lelang, lelang.status, userBid?.id_penawaran, userBid?.nominal)}
-                  isLoggedin={isLoggedin}
-                  title={lelang.nama_barang}
-                  description={lelang.deskripsi_barang}
-                  date={lelang.tanggal}
-                  price={lelang.harga_awal}
-                  imageUrl={lelang.foto}
-                  status={lelang.status}
-                  highestBid={getHighestBid(lelang.id_lelang)}
-                  hasBid={hasUserBid(lelang.id_lelang)}
-                />
-              );
-            })}
-          </div>
-          
-          
-          </div>
-          
         )}
         {showHistoryPopup && (
           <HistoryPenawaran
@@ -246,7 +246,6 @@ const MainLayoutsMasyarakatMember = () => {
             isEdit={isEdit}
           />
         )}
-        
       </section>
     </>
   );

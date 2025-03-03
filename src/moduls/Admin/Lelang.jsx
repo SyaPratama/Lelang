@@ -9,6 +9,7 @@ import PriceRangeFilter from './components/PriceRangeFilter'; // Import PriceRan
 import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
 import Swal from 'sweetalert2';
 import { useAuth } from '../../Auth/AuthContext';
+import { Banknote, Calendar } from 'lucide-react';
 
 const Lelang = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
@@ -153,7 +154,7 @@ const Lelang = () => {
           <div className="order-2 col-span-6 sm:col-span-3 md:col-span-3 lg:col-span-2">
           <select
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC]"
+            className="w-full p-2 border-none text-[#4365D1] bg-[#EAF0FC]"
             value={statusFilter}
           >
             <option className='bg-white text-gray-600' value="semua">Status</option>
@@ -178,16 +179,16 @@ const Lelang = () => {
              
           <div className="order-4 col-span-12 sm:col-span-6 md:col-span-8 lg:col-span-3 flex justify-start items-start gap-2">
           <button
-            className="bg-blue-main text-white p-2 px-1 rounded-lg w-full"
+            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
             onClick={() => setShowDateRangePopup(true)}
           >
-            Tanggal
+            <Calendar className="w-5 h-5 mr-2" /> Tanggal
           </button>
           <button
-            className="bg-blue-main text-white col-span-6 p-2 px-1 w-full rounded-lg"
+            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
             onClick={() => setShowPriceRangePopup(true)}
           >
-            Harga
+            <Banknote className="w-5 h-5 mr-2" /> Harga
           </button>
           </div>
           </div>
