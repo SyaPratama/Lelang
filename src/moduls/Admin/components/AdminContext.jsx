@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { getBarang, addBarang, editBarang, deleteBarang, getLelang, addLelang, deleteLelang, updateLelangStatus, getUser, addPenawaran, getPenawaran, deletePenawaran, editPenawaran, getHighestBid, postHistory, deleteHistory, getHistory, editHistory } from "../../../config/api";
 import { useAuth } from "../../../Auth/AuthContext";
+import { Flag } from "lucide-react";
 
 const initialLelang = {
   barang: [],
@@ -296,11 +297,18 @@ const LelangProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if(handleFetch)
+    {
+
       handleGetBarang();
       handleGetLelang();
       handleGetUser();
       handleGetPenawaran();
-  }, [handleFetch]);
+      setTimeout(() => {
+        setHandleFetch(false);
+      },100);
+    }
+  }, [handleFetch,barang]);
 
   return (
     <LelangContext.Provider value={{ barang, dataLelang,handleFetch, users, penawaran, handleGetHighestBid, handleEditPenawaran, handleDeletePenawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus, handlePostHistory, handleDeleteHistory }}>
